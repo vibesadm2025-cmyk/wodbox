@@ -1,0 +1,468 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>WODBOX</title>
+<meta name="description" content="MVP do WODBOX: gestão e engajamento para boxes de cross. Dados de demonstração.">
+<meta name="theme-color" content="#0a0a0b">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="WODBOX">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="icon" href="./icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="./icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0a0a0b;--bg2:#101013;--panel:#17171b;--panel2:#1e1e23;--line:#2a2a30;
+  --ink:#f4f1ea;--muted:#a4a19a;--dim:#6f6d68;
+  --accent:#ff5a1f;--accent-ink:#1a0d06;--lime:#c6ff3d;--lime-ink:#1a2200;--blue:#4cc9f0;--gold:#ffcc4d;--red:#ff4d4d;
+  --display:"Bebas Neue","Oswald",Impact,sans-serif;--body:"Inter",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --safe-b:env(safe-area-inset-bottom,0px);--safe-t:env(safe-area-inset-top,0px);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;background:var(--bg);color:var(--ink);font-family:var(--body);-webkit-font-smoothing:antialiased}
+body{overscroll-behavior:none}
+button{font:inherit;cursor:pointer;color:inherit;background:none;border:0}
+input,select,textarea{font:inherit;color:var(--ink);background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:12px 14px;width:100%;outline:none}
+input:focus,select:focus,textarea:focus{border-color:var(--accent)}
+label{display:block;font-size:12px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin:12px 0 6px}
+#app{max-width:480px;margin:0 auto;min-height:100%;position:relative;background:var(--bg);display:flex;flex-direction:column}
+@media(min-width:600px){body{background:#050506}#app{box-shadow:0 0 0 1px #1c1c20,0 40px 120px -40px #000}}
+.hdr{position:sticky;top:0;z-index:20;background:rgba(10,10,11,.85);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);padding:calc(12px + var(--safe-t)) 18px 12px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line)}
+.brand{font-family:var(--display);font-size:22px;letter-spacing:.14em;line-height:1}
+.brand small{display:block;font-family:var(--body);font-size:10px;letter-spacing:.14em;color:var(--muted);margin-top:2px}
+.hdr .right{display:flex;gap:8px;align-items:center}
+.ib{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:var(--panel);border:1px solid var(--line);font-size:16px}
+.ib.badge{position:relative}.ib.badge::after{content:attr(data-n);position:absolute;top:-4px;right:-4px;background:var(--accent);color:#000;font-size:10px;font-weight:700;min-width:16px;height:16px;border-radius:999px;display:grid;place-items:center;padding:0 4px}
+main{flex:1;padding:16px 16px calc(92px + var(--safe-b))}
+.tabbar{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:rgba(14,14,16,.92);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid var(--line);display:flex;padding:8px 6px calc(8px + var(--safe-b));z-index:20}
+.tabbar button{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;color:var(--dim);font-size:10.5px;letter-spacing:.04em;padding:6px 0;border-radius:12px}
+.tabbar button .ic{font-size:20px;line-height:1}
+.tabbar button.on{color:var(--lime)}
+h1{font-family:var(--display);font-size:38px;line-height:.95;letter-spacing:.02em}
+h2{font-family:var(--display);font-size:26px;letter-spacing:.04em;line-height:1}
+h3{font-family:var(--display);font-size:20px;letter-spacing:.05em;line-height:1}
+.kicker{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:600}
+.muted{color:var(--muted)}.dim{color:var(--dim)}.lm{color:var(--lime)}.hl{color:var(--accent)}.gd{color:var(--gold)}.bl{color:var(--blue)}
+.sm{font-size:12.5px}.xs{font-size:11px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:16px;margin-bottom:12px}
+.card.acc{border-color:rgba(255,90,31,.55)}.card.lime{border-color:rgba(198,255,61,.5)}
+.row{display:flex;align-items:center;gap:12px}.between{justify-content:space-between}.wrap{flex-wrap:wrap}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:14px;padding:14px 18px;font-weight:700;font-size:14px;letter-spacing:.03em;width:100%;transition:transform .08s}
+.btn:active{transform:scale(.97)}
+.btn.p{background:var(--accent);color:var(--accent-ink)}.btn.l{background:var(--lime);color:var(--lime-ink)}
+.btn.g{background:var(--panel2);border:1px solid var(--line);color:var(--ink)}.btn.sm{padding:9px 12px;font-size:12.5px;width:auto;border-radius:10px}
+.btn.d{background:rgba(255,77,77,.12);border:1px solid rgba(255,77,77,.4);color:#ff8a8a}
+.btn[disabled]{opacity:.45;pointer-events:none}
+.tag{display:inline-block;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--line);border-radius:999px;padding:4px 9px;color:var(--muted);font-weight:600}
+.tag.acc{border-color:var(--accent);color:var(--accent)}.tag.lime{border-color:var(--lime);color:var(--lime)}.tag.red{border-color:var(--red);color:#ff8a8a}.tag.gold{border-color:var(--gold);color:var(--gold)}.tag.blue{border-color:var(--blue);color:var(--blue)}
+.av{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:13px;color:#000;flex-shrink:0}
+.av.s{width:28px;height:28px;font-size:10px}
+.big{font-family:var(--display);font-size:34px;line-height:1;letter-spacing:.03em}
+.xp{height:8px;background:#26262c;border-radius:999px;overflow:hidden}.xp i{display:block;height:100%;background:linear-gradient(90deg,var(--lime),#7dff9a);width:0;transition:width .9s cubic-bezier(.2,.7,.2,1)}
+.xp.o i{background:var(--accent)}.xp.b i{background:var(--blue)}
+.list{display:flex;flex-direction:column;gap:8px}
+.item{display:flex;align-items:center;gap:12px;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:12px 14px}
+.item.tap{cursor:pointer}.item.tap:active{background:var(--panel2)}
+.item .t{flex:1;min-width:0}.item .t b{display:block;font-weight:600;font-size:14px}.item .t span{display:block;color:var(--muted);font-size:12px;margin-top:2px}
+.streak{display:flex;gap:5px}.streak i{flex:1;height:26px;border-radius:7px;background:#232329;display:grid;place-items:center;font-size:13px}
+.streak i.ok{background:var(--accent)}.streak i.fz{background:var(--blue)}.streak i.now{outline:2px dashed var(--lime);outline-offset:-2px}
+.badges{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.bd{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:10px 8px;text-align:center;font-size:11px;line-height:1.3}
+.bd .e{font-size:24px;display:block;margin-bottom:4px}.bd.lk{opacity:.38;filter:grayscale(1)}
+.seg{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none}.seg::-webkit-scrollbar{display:none}
+.seg button{white-space:nowrap;border:1px solid var(--line);border-radius:999px;padding:8px 14px;font-size:12.5px;color:var(--muted);font-weight:600}
+.seg button.on{background:var(--lime);color:var(--lime-ink);border-color:var(--lime)}
+.lb .item .pos{font-family:var(--display);font-size:22px;color:var(--dim);width:26px;text-align:center}
+.lb .item:nth-child(1) .pos{color:var(--gold)}.lb .item:nth-child(2) .pos{color:#d0d0d0}.lb .item:nth-child(3) .pos{color:#c98a4b}
+.lb .item .sc{font-family:var(--display);font-size:22px;color:var(--lime);letter-spacing:.03em}
+.item.me{border-color:rgba(198,255,61,.5);background:rgba(198,255,61,.04)}
+.feed .item{align-items:flex-start}.feed .txt{font-size:13.5px;line-height:1.4}.feed .txt b{font-weight:600}.feed .meta{display:flex;gap:14px;margin-top:8px;font-size:12px;color:var(--muted)}
+.feed .meta button{color:var(--muted);display:inline-flex;gap:5px;align-items:center;font-weight:600}.feed .meta button.on{color:var(--lime)}
+.kpi{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:14px}
+.kpi .n{font-family:var(--display);font-size:32px;line-height:1;letter-spacing:.03em}.kpi .l{font-size:11.5px;color:var(--muted);margin-top:4px;line-height:1.3}
+.kpi.warn .n{color:#ff8a8a}.kpi.good .n{color:var(--lime)}
+.sheet-bg{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:40;display:none;align-items:flex-end;justify-content:center}
+.sheet-bg.on{display:flex}
+.sheet{width:100%;max-width:480px;background:var(--bg2);border-radius:24px 24px 0 0;padding:14px 18px calc(22px + var(--safe-b));max-height:88vh;overflow:auto;border-top:1px solid var(--line);animation:up .28s cubic-bezier(.2,.7,.2,1)}
+@keyframes up{from{transform:translateY(40px);opacity:0}to{transform:none;opacity:1}}
+.sheet .grab{width:44px;height:5px;border-radius:999px;background:var(--line);margin:0 auto 14px}
+.toasts{position:fixed;top:calc(14px + var(--safe-t));left:50%;transform:translateX(-50%);z-index:60;display:flex;flex-direction:column;gap:8px;width:min(92vw,440px);pointer-events:none}
+.toast{background:var(--panel2);border:1px solid var(--line);border-left:4px solid var(--lime);border-radius:14px;padding:12px 14px;font-size:13.5px;box-shadow:0 20px 50px -20px #000;animation:tin .3s ease}
+.toast.o{border-left-color:var(--accent)}.toast.g{border-left-color:var(--gold)}.toast b{font-weight:700}
+@keyframes tin{from{transform:translateY(-10px);opacity:0}to{transform:none;opacity:1}}
+.login{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:32px 24px calc(32px + var(--safe-b));gap:18px;background:radial-gradient(600px 400px at 85% 10%,rgba(255,90,31,.22),transparent 60%),var(--bg)}
+.login h1{font-size:64px}.login h1 span{color:var(--accent);display:block}
+.role{display:flex;align-items:center;gap:14px;background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:16px;text-align:left;width:100%}
+.role .e{font-size:28px}.role b{display:block;font-size:15px}.role span{font-size:12.5px;color:var(--muted)}
+.role:active{background:var(--panel2)}
+.wodcard{background:linear-gradient(160deg,#1a1a1f,#101013);border:1px solid var(--line);border-radius:20px;padding:18px;position:relative;overflow:hidden;margin-bottom:12px}
+.wodcard::before{content:"";position:absolute;right:-40px;top:-40px;width:160px;height:160px;border-radius:50%;background:radial-gradient(circle,rgba(198,255,61,.18),transparent 70%)}
+.wodcard h2{font-size:40px;color:var(--lime)}
+.wodcard pre{font-family:var(--body);white-space:pre-wrap;color:var(--muted);font-size:13.5px;line-height:1.5;margin-top:8px}
+.classes{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
+.cls{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:10px;text-align:center}
+.cls b{display:block;font-family:var(--display);font-size:20px;letter-spacing:.04em}.cls span{display:block;font-size:11px;color:var(--muted);margin-top:2px}
+.cls.full{opacity:.7}.cls.mine{border-color:var(--lime);background:rgba(198,255,61,.06)}.cls.mine b{color:var(--lime)}
+.cls.wait{border-color:var(--blue)}
+.pr{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--line);font-size:14px}.pr:last-child{border:0}.pr b{font-family:var(--display);font-size:20px;letter-spacing:.03em;color:var(--lime)}
+.team{display:flex;align-items:center;gap:10px;margin-bottom:10px}.team .nm{width:92px;font-weight:600;font-size:13px}.team .xp{flex:1}.team .v{font-family:var(--display);font-size:18px;width:72px;text-align:right}
+.empty{text-align:center;color:var(--dim);padding:28px 12px;font-size:13.5px}
+.search{display:flex;gap:8px;margin-bottom:12px}.search input{flex:1}
+.pulse{animation:pulse 1.6s ease-in-out infinite}@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(255,90,31,.5)}60%{box-shadow:0 0 0 12px rgba(255,90,31,0)}}
+.levelup{position:fixed;inset:0;z-index:70;display:grid;place-items:center;background:rgba(0,0,0,.75);text-align:center;padding:30px}
+.levelup .box{animation:pop .5s cubic-bezier(.2,.9,.3,1.3)}
+@keyframes pop{from{transform:scale(.6);opacity:0}to{transform:none;opacity:1}}
+.levelup h1{font-size:72px;color:var(--lime)}
+.chip{display:inline-flex;align-items:center;gap:6px;background:var(--panel2);border:1px solid var(--line);border-radius:999px;padding:6px 10px;font-size:12px;color:var(--muted)}
+hr{border:0;border-top:1px solid var(--line);margin:14px 0}
+.demo{font-size:11px;color:var(--dim);text-align:center;margin-top:18px;line-height:1.5}
+.demo button{color:var(--muted);text-decoration:underline}
+.table{width:100%;border-collapse:collapse;font-size:13px}.table td{padding:9px 4px;border-bottom:1px solid var(--line)}.table td:last-child{text-align:right;font-weight:600}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div class="toasts" id="toasts"></div>
+<div class="sheet-bg" id="sheetbg"><div class="sheet" id="sheet"></div></div>
+
+<script>
+/* =====================================================================
+   WODBOX · MVP com dados mocados
+   Tudo que é "estado" fica em localStorage (chave STORE). Os dados base
+   (atletas, WODs, turmas) estão em DATA e são regenerados a cada reset.
+   ===================================================================== */
+const STORE='wodbox-mvp-v1';
+const BOX={name:'Gladys 27', city:'Vitória · ES'};
+const TODAY=new Date(); const todayKey=TODAY.toISOString().slice(0,10);
+const fmtDate=d=>d.toLocaleDateString('pt-BR',{weekday:'short',day:'2-digit',month:'short'}).replace('.','');
+
+const XP={checkin:10,result:15,benchmark:30,pr:50,week:40,bump:2,bumpCap:10,referral:100};
+const LEVELS=[['Rookie',0],['Atleta',500],['Veterano',1500],['Elite',3500],['Lenda do box',7500]];
+const TEAMS={vermelho:['Vermelho','#ff5a1f'],preto:['Preto','#9a9a9a'],lima:['Lima','#c6ff3d'],azul:['Azul','#4cc9f0']};
+const COLORS=['#c6ff3d','#4cc9f0','#ffcc4d','#ff5a1f','#f472b6','#a78bfa','#34d399','#fb923c'];
+
+function mkAthletes(){
+  const raw=[
+    ['me','Rafa C.','RX',32,'vermelho',2140,7,'Ilimitado',189,'ativo',0,14,{Fran:[['2026-03-02','6:40'],['2026-07-14','6:05']],Grace:[['2026-05-10','3:58']],Cindy:[['2026-08-20','19 rounds']]},{'Clean':100,'Back Squat':140,'Deadlift':180,'Snatch':70,'Front Squat':115}],
+    ['a2','Bruno L.','RX',28,'preto',3120,11,'Ilimitado',189,'ativo',0,20,{Fran:[['2026-06-01','6:10']]},{'Clean':110,'Back Squat':150,'Deadlift':200,'Snatch':80}],
+    ['a3','Carla M.','RX',35,'lima',2780,9,'Ilimitado',189,'ativo',1,26,{Fran:[['2026-06-01','6:35']]},{'Clean':75,'Back Squat':105,'Deadlift':130,'Snatch':52}],
+    ['a4','Diego A.','RX',41,'azul',1660,4,'3x semana',149,'ativo',2,9,{Fran:[['2026-06-01','7:02']]},{'Clean':95,'Back Squat':135,'Deadlift':170,'Snatch':65}],
+    ['a5','Lu Tavares','RX',30,'vermelho',1980,6,'Ilimitado',189,'ativo',0,17,{Fran:[['2026-06-01','7:19']]},{'Clean':72,'Back Squat':100,'Deadlift':125,'Snatch':50}],
+    ['a6','Marina','Scaled',29,'preto',640,3,'3x semana',149,'ativo',0,3,{Fran:[['2026-09-01','7:55']]},{'Clean':45,'Back Squat':70,'Deadlift':90,'Snatch':30}],
+    ['a7','Paulo H.','Scaled',46,'lima',880,2,'Ilimitado',189,'atrasado',1,8,{Fran:[['2026-04-11','9:10'],['2026-09-01','8:20']]},{'Clean':60,'Back Squat':90,'Deadlift':120,'Snatch':40}],
+    ['a8','Bia S.','Scaled',24,'azul',410,4,'3x semana',149,'ativo',0,2,{Fran:[['2026-09-01','8:41']]},{'Clean':40,'Back Squat':60,'Deadlift':85,'Snatch':28}],
+    ['a9','Tati R.','Scaled',38,'vermelho',1210,5,'Ilimitado',189,'ativo',3,11,{Fran:[['2026-09-01','9:03']]},{'Clean':50,'Back Squat':75,'Deadlift':100,'Snatch':33}],
+    ['a10','Caio N.','Scaled',19,'preto',530,1,'3x semana',149,'ativo',0,2,{Fran:[['2026-09-01','9:30']]},{'Clean':55,'Back Squat':80,'Deadlift':110,'Snatch':35}],
+    ['a11','João P.','RX',27,'lima',2450,8,'Ilimitado',189,'ativo',0,15,{Fran:[['2026-06-01','6:48']]},{'Clean':100,'Back Squat':145,'Deadlift':190,'Snatch':75}],
+    ['a12','Fê Moraes','RX',33,'azul',1540,0,'Ilimitado',189,'ativo',12,13,{Fran:[['2026-06-01','7:40']]},{'Clean':65,'Back Squat':95,'Deadlift':120,'Snatch':45}],
+    ['a13','Gus Lemos','Scaled',52,'vermelho',720,0,'3x semana',149,'atrasado',9,6,{},{'Clean':50,'Back Squat':80,'Deadlift':110,'Snatch':32}],
+    ['a14','Nina K.','RX',26,'preto',1890,6,'Ilimitado',189,'ativo',1,10,{Fran:[['2026-06-01','7:11']]},{'Clean':70,'Back Squat':100,'Deadlift':130,'Snatch':50}],
+    ['a15','Vitor S.','Scaled',31,'lima',300,1,'Experimental',0,'ativo',0,0,{},{}],
+    ['a16','Dani F.','RX',29,'azul',2010,5,'Ilimitado',189,'ativo',16,18,{Fran:[['2026-06-01','6:58']]},{'Clean':80,'Back Squat':110,'Deadlift':140,'Snatch':55}],
+  ];
+  return raw.map((r,i)=>({id:r[0],name:r[1],cat:r[2],age:r[3],team:r[4],xp:r[5],streak:r[6],plan:r[7],price:r[8],status:r[9],lastCheckin:r[10],months:r[11],bench:r[12],prs:r[13],color:COLORS[i%COLORS.length],checkins:r[11]*11+Math.floor(r[5]/60),bumps:Math.floor(r[5]/40)}));
+}
+const inits=n=>n.split(' ').map(x=>x[0]).join('').slice(0,2).toUpperCase();
+
+function mkWods(){
+  const d=n=>{const x=new Date(TODAY);x.setDate(x.getDate()-n);return x.toISOString().slice(0,10)};
+  return [
+    {id:'w0',date:d(0),title:'Fran',type:'For time',benchmark:true,published:true,desc:'21-15-9\nThrusters 43/30 kg\nPull-ups',rx:'Thrusters 43/30 kg · Pull-ups',scaled:'Thrusters 30/20 kg · Ring rows',cap:'Time cap 10 min',score:'time'},
+    {id:'w1',date:d(1),title:'Back Squat 5x5',type:'Strength',benchmark:false,published:true,desc:'5x5 Back Squat @ 80%\n+ 10 min AMRAP: 10 box jumps, 10 KB swings',score:'load'},
+    {id:'w2',date:d(2),title:'Helen',type:'For time',benchmark:true,published:true,desc:'3 rounds\n400 m run\n21 KB swings 24/16\n12 pull-ups',score:'time'},
+    {id:'w3',date:d(3),title:'EMOM 20',type:'EMOM',benchmark:false,published:true,desc:'Min 1: 12 cal row\nMin 2: 10 burpees\nMin 3: 15 wall balls\nMin 4: rest',score:'reps'},
+    {id:'w4',date:d(4),title:'Cindy',type:'AMRAP 20',benchmark:true,published:true,desc:'5 pull-ups\n10 push-ups\n15 air squats',score:'rounds'},
+    {id:'w5',date:d(1+6),title:'Grace',type:'For time',benchmark:true,published:true,desc:'30 Clean & Jerk 61/43 kg',score:'time'},
+  ];
+}
+function mkClasses(){
+  return [
+    {id:'c1',time:'06:00',coach:'Coach Léo',cap:14,att:['a2','a3','a5','a6','a8','a11','a14','a9','a10','a4','a16','a12']},
+    {id:'c2',time:'07:00',coach:'Coach Léo',cap:14,att:['a7','a13','a15','a2','a3','a11','a14','a5','a6','a8','a9']},
+    {id:'c3',time:'12:00',coach:'Coach Ana',cap:14,att:['a4','a12','a16','a2','a3','a11']},
+    {id:'c4',time:'17:00',coach:'Coach Ana',cap:14,att:['a2','a3','a4','a5','a6','a7','a8','a9','a10','a11','a12','a13','a14','a16'],wait:['a15']},
+    {id:'c5',time:'18:00',coach:'Coach Ana',cap:14,att:['a6','a8','a10','a15','a9','a13','a7','a4','a16']},
+    {id:'c6',time:'19:00',coach:'Coach Léo',cap:14,att:['a2','a3','a5','a11','a14','a4','a12','a16','a6','a8','a9','a10','a7']},
+  ];
+}
+function mkFeed(){
+  const t=(h)=>{const x=new Date(TODAY);x.setHours(h,0,0,0);return x.getTime()};
+  return [
+    {id:'f1',who:'a11',kind:'pr',txt:'bateu PR no <b>Clean: 100 kg</b> 🏆',t:t(7),bumps:14},
+    {id:'f2',who:'a6',kind:'checkin',txt:'fez check-in às 06:00 · 12 pessoas na aula',t:t(6),bumps:3},
+    {id:'f3',who:'a2',kind:'result',txt:'fechou <b>Fran</b> em <b>6:10</b> RX',t:t(7),bumps:9},
+    {id:'f4',who:'team',kind:'team',txt:'<b>Time Vermelho</b> assumiu a liderança do desafio de outubro',t:t(8),bumps:21},
+    {id:'f5',who:'a8',kind:'badge',txt:'desbloqueou a badge <b>50 check-ins</b> 🎖',t:t(8),bumps:11},
+    {id:'f6',who:'a3',kind:'result',txt:'fechou <b>Fran</b> em <b>6:35</b> RX · "mão rasgada mas feliz"',t:t(9),bumps:7},
+  ];
+}
+const BADGES=[
+  ['first','🥇','Primeiro WOD',a=>a.checkins>=1],['c10','🔟','10 check-ins',a=>a.checkins>=10],['c50','💪','50 check-ins',a=>a.checkins>=50],
+  ['c100','💯','100 check-ins',a=>a.checkins>=100],['c250','🏛','250 check-ins',a=>a.checkins>=250],['fran','🔥','Fran',a=>!!(a.bench.Fran&&a.bench.Fran.length)],
+  ['grace','⚡','Grace',a=>!!(a.bench.Grace&&a.bench.Grace.length)],['cindy','🌀','Cindy',a=>!!(a.bench.Cindy&&a.bench.Cindy.length)],['murph','🎖','Murph',a=>!!(a.bench.Murph&&a.bench.Murph.length)],
+  ['early','🌅','Madrugador',a=>a.early>=10],['comm','👊','Comunidade',a=>a.bumps>=50],['year','🎂','1 ano de box',a=>a.months>=12],
+];
+
+/* ---------- estado ---------- */
+let S;
+function fresh(){
+  return {role:null,tab:'hoje',athletes:mkAthletes(),wods:mkWods(),classes:mkClasses(),feed:mkFeed(),
+    myCheckin:null,myWait:null,results:{},bumped:{},bumpDay:{d:todayKey,n:0},early:6,weekDone:[1,1,0,0,0,0,0],weekGoal:3,
+    challenge:{title:'Outubro: 20 check-ins',goal:20,mine:13},teamXP:{vermelho:12480,preto:11920,lima:11300,azul:10870},
+    notes:[],rankTab:'rx',admTab:'painel',alunoFilter:'todos',seen:1,
+  };
+}
+function load(){try{const s=JSON.parse(localStorage.getItem(STORE));if(s&&s.athletes){S=s;return}}catch(e){}S=fresh()}
+function save(){try{localStorage.setItem(STORE,JSON.stringify(S))}catch(e){}}
+function reset(){localStorage.removeItem(STORE);S=fresh();render();toast('Dados de demonstração restaurados','o')}
+const me=()=>S.athletes.find(a=>a.id==='me');
+const byId=id=>S.athletes.find(a=>a.id===id);
+const todayWod=()=>S.wods.find(w=>w.date===todayKey)||S.wods[0];
+function levelOf(xp){let l=0;LEVELS.forEach((x,i)=>{if(xp>=x[1])l=i});return l}
+function levelProg(xp){const l=levelOf(xp);const cur=LEVELS[l][1],next=LEVELS[l+1]?LEVELS[l+1][1]:null;return {l,name:LEVELS[l][0],cur,next,pct:next?Math.round((xp-cur)/(next-cur)*100):100}}
+function addXP(n,why){const m=me();const before=levelOf(m.xp);m.xp+=n;S.teamXP[m.team]+=n;save();toast(`<b>+${n} XP</b> · ${why}`);if(levelOf(m.xp)>before){setTimeout(()=>levelUp(LEVELS[levelOf(m.xp)][0]),500)}}
+
+/* ---------- util UI ---------- */
+const $=s=>document.querySelector(s);
+function toast(html,cls=''){const t=document.createElement('div');t.className='toast '+cls;t.innerHTML=html;$('#toasts').appendChild(t);setTimeout(()=>{t.style.opacity=0;t.style.transition='opacity .4s';setTimeout(()=>t.remove(),400)},2600)}
+function sheet(html){$('#sheet').innerHTML='<div class="grab"></div>'+html;$('#sheetbg').classList.add('on')}
+function closeSheet(){$('#sheetbg').classList.remove('on')}
+$('#sheetbg').addEventListener('click',e=>{if(e.target.id==='sheetbg')closeSheet()});
+function levelUp(name){const d=document.createElement('div');d.className='levelup';d.innerHTML=`<div class="box"><div class="kicker">Subiu de nível</div><h1>${name}</h1><p class="muted" style="margin:10px 0 18px">Passa na recepção: tem uma recompensa do box esperando por você.</p><button class="btn l" style="width:auto;padding:12px 28px">Bora 💥</button></div>`;d.querySelector('button').onclick=()=>d.remove();document.body.appendChild(d)}
+const avatar=(a,s='')=>`<span class="av ${s}" style="background:${a.color}">${inits(a.name)}</span>`;
+const ago=t=>{const m=Math.round((Date.now()-t)/60000);if(m<60)return m+' min';const h=Math.round(m/60);if(h<24)return h+' h';return Math.round(h/24)+' d'};
+
+/* =====================================================================
+   RENDER
+   ===================================================================== */
+function render(){
+  const app=$('#app');
+  if(!S.role){app.innerHTML=viewLogin();return}
+  if(S.role==='atleta'){
+    app.innerHTML=hdr('Atleta')+'<main>'+({hoje:viewHoje,feed:viewFeed,ranking:viewRanking,perfil:viewPerfil})[S.tab]()+'</main>'+tabbar([['hoje','🏋️','Hoje'],['feed','💬','Feed'],['ranking','🏆','Ranking'],['perfil','👤','Perfil']],S.tab,'tab');
+  }else{
+    app.innerHTML=hdr('Gestão')+'<main>'+({painel:admPainel,wod:admWod,turmas:admTurmas,alunos:admAlunos,fin:admFin})[S.admTab]()+'</main>'+tabbar([['painel','📊','Painel'],['wod','📋','WOD'],['turmas','🕒','Turmas'],['alunos','👥','Alunos'],['fin','💰','Caixa']],S.admTab,'admTab');
+  }
+  window.scrollTo(0,0);
+}
+function hdr(mode){
+  const m=me();const n=S.role==='atleta'?S.notes.length:(S.athletes.filter(a=>a.status==='atrasado').length+riskList().length);
+  return `<header class="hdr"><div class="brand">WODBOX<small>${BOX.name.toUpperCase()} · ${mode.toUpperCase()}</small></div>
+  <div class="right"><button class="ib badge" data-n="${n}" data-a="notes">🔔</button><button class="ib" data-a="switch" title="Trocar de perfil">${S.role==='atleta'?avatar(m,'s'):'⚙️'}</button></div></header>`;
+}
+function tabbar(items,cur,key){return `<nav class="tabbar">${items.map(i=>`<button class="${cur===i[0]?'on':''}" data-a="${key}" data-v="${i[0]}"><span class="ic">${i[1]}</span>${i[2]}</button>`).join('')}</nav>`}
+
+function viewLogin(){
+  return `<div class="login"><div><div class="kicker">MVP · dados de demonstração</div><h1>WODBOX<span>${BOX.name}</span></h1><p class="muted" style="margin-top:8px">Escolha como entrar. Tudo que você fizer fica salvo neste navegador.</p></div>
+  <button class="role" data-a="login" data-v="atleta"><span class="e">🏋️</span><div><b>Entrar como atleta</b><span>Rafa C. · RX · Time Vermelho · nível ${levelProg(me().xp).name}</span></div></button>
+  <button class="role" data-a="login" data-v="gestao"><span class="e">📊</span><div><b>Entrar como gestão</b><span>Dono e coaches: WOD, turmas, alunos, caixa</span></div></button>
+  <p class="demo">Instale na tela inicial para abrir como app.<br><button data-a="reset">Restaurar dados de demonstração</button></p></div>`;
+}
+
+/* ---------- ATLETA · HOJE ---------- */
+function viewHoje(){
+  const m=me(),w=todayWod(),lp=levelProg(m.xp),res=S.results[w.id];
+  const cls=S.classes.map(c=>{const full=c.att.length>=c.cap,mine=S.myCheckin===c.id,wait=S.myWait===c.id;return `<button class="cls ${full?'full':''} ${mine?'mine':''} ${wait?'wait':''}" data-a="checkin" data-v="${c.id}"><b>${c.time}</b><span>${mine?'✓ você vai':wait?'na fila':full?'lotada · fila':(c.cap-c.att.length)+' vagas'}</span></button>`}).join('');
+  const wk=S.weekDone.map((d,i)=>`<i class="${d?'ok':''} ${i===TODAY.getDay()-1||(TODAY.getDay()===0&&i===6)?'now':''}">${d?'🔥':''}</i>`).join('');
+  return `<div class="row between" style="margin-bottom:12px"><div><div class="kicker">${fmtDate(TODAY)}</div><h1>Fala, ${m.name.split(' ')[0]}.</h1></div><div style="text-align:right"><div class="big lm">🔥 ${m.streak}</div><div class="xs muted">semanas de streak</div></div></div>
+  <div class="wodcard"><div class="row between"><span class="tag lime">${w.type}</span>${w.benchmark?'<span class="tag gold">Benchmark</span>':''}</div><h2 style="margin-top:10px">${w.title}</h2><pre>${w.desc}</pre>${w.cap?`<div class="xs dim" style="margin-top:6px">${w.cap}</div>`:''}
+    <div class="classes">${cls}</div>
+    ${res?`<div class="card lime" style="margin:12px 0 0"><div class="row between"><div><div class="xs muted">Seu resultado</div><div class="big lm">${res.score}</div><div class="xs muted">${res.cat} · esforço ${res.rpe}/10${res.pr?' · <span class="gd">PR!</span>':''}</div></div><button class="btn g sm" data-a="result">Editar</button></div></div>`
+      :`<button class="btn l ${S.myCheckin?'':'pulse'}" style="margin-top:12px" data-a="result">${S.myCheckin?'Registrar resultado':'Registrar resultado'}</button>`}
+  </div>
+  <div class="card"><div class="row between"><div><div class="xs muted">Nível ${lp.l+1} · ${lp.name}</div><div class="big">${m.xp.toLocaleString('pt-BR')} XP</div></div><div class="sm muted" style="text-align:right">${lp.next?`faltam ${(lp.next-m.xp).toLocaleString('pt-BR')}<br>para ${LEVELS[lp.l+1][0]}`:'nível máximo'}</div></div><div class="xp" style="margin-top:10px"><i style="width:${lp.pct}%"></i></div></div>
+  <div class="card"><div class="row between"><h3>Semana</h3><span class="xs muted">meta ${S.weekDone.filter(Boolean).length}/${S.weekGoal} treinos · <button class="lm" data-a="goal">mudar</button></span></div><div class="streak" style="margin-top:10px">${wk}</div><div class="xs dim" style="margin-top:8px">Fechou a meta, +${XP.week} XP e o streak continua. Lesão ou viagem? <button class="bl" data-a="freeze">Congelar streak</button></div></div>
+  <div class="card acc"><div class="row between"><div><div class="kicker">Desafio do mês</div><h3 style="margin-top:4px">${S.challenge.title}</h3></div><div class="big">${S.challenge.mine}/${S.challenge.goal}</div></div><div class="xp o" style="margin-top:10px"><i style="width:${Math.min(100,S.challenge.mine/S.challenge.goal*100)}%"></i></div><div class="xs muted" style="margin-top:8px">Prêmio: camiseta do Open interno. Seu time: <b style="color:${TEAMS[m.team][1]}">${TEAMS[m.team][0]}</b>, ${teamRank(m.team)}º lugar.</div></div>
+  <button class="btn g" data-a="invite">🎟 Convidar um amigo para aula experimental · +${XP.referral} XP</button>
+  <p class="demo">Dados de demonstração · <button data-a="reset">restaurar</button></p>`;
+}
+function teamRank(t){const arr=Object.entries(S.teamXP).sort((a,b)=>b[1]-a[1]);return arr.findIndex(x=>x[0]===t)+1}
+
+function doCheckin(cid){
+  const c=S.classes.find(x=>x.id===cid);
+  if(S.myCheckin===cid){c.att=c.att.filter(x=>x!=='me');S.myCheckin=null;save();render();toast('Check-in cancelado','o');return}
+  if(S.myWait===cid){c.wait=(c.wait||[]).filter(x=>x!=='me');S.myWait=null;save();render();toast('Saiu da fila','o');return}
+  if(S.myCheckin){const o=S.classes.find(x=>x.id===S.myCheckin);o.att=o.att.filter(x=>x!=='me')}
+  if(S.myWait){const o=S.classes.find(x=>x.id===S.myWait);o.wait=(o.wait||[]).filter(x=>x!=='me');S.myWait=null}
+  if(c.att.length>=c.cap){c.wait=c.wait||[];c.wait.push('me');S.myWait=cid;S.myCheckin=null;save();render();toast(`Você está na fila da aula das ${c.time}. Avisamos se abrir vaga.`,'o');return}
+  c.att.push('me');S.myCheckin=cid;const m=me();m.checkins++;if(parseInt(c.time)<7)S.early++;m.lastCheckin=0;
+  const dow=(TODAY.getDay()+6)%7;if(!S.weekDone[dow]){S.weekDone[dow]=1;S.challenge.mine++;}
+  S.feed.unshift({id:'f'+Date.now(),who:'me',kind:'checkin',txt:`fez check-in às ${c.time} · ${c.att.length} pessoas na aula`,t:Date.now(),bumps:0});
+  save();render();addXP(XP.checkin,`check-in às ${c.time}`);
+  if(S.weekDone.filter(Boolean).length===S.weekGoal)setTimeout(()=>addXP(XP.week,'semana completa na meta'),900);
+  checkBadges();
+}
+function checkBadges(){const m=me();const had=S.badgesHad||[];const now=BADGES.filter(b=>b[3](Object.assign({early:S.early},m))).map(b=>b[0]);const neu=now.filter(x=>!had.includes(x));S.badgesHad=now;save();if(had.length&&neu.length){neu.forEach(id=>{const b=BADGES.find(x=>x[0]===id);setTimeout(()=>toast(`${b[1]} Badge desbloqueada: <b>${b[2]}</b>`,'g'),1200);S.feed.unshift({id:'fb'+Date.now(),who:'me',kind:'badge',txt:`desbloqueou a badge <b>${b[2]}</b> ${b[1]}`,t:Date.now(),bumps:0})});save()}}
+
+function sheetResult(){
+  const w=todayWod(),m=me(),r=S.results[w.id]||{};
+  const ph={time:'mm:ss, ex. 5:42',load:'kg, ex. 120',reps:'total de reps',rounds:'rounds + reps, ex. 19+7'}[w.score]||'resultado';
+  sheet(`<div class="kicker">${w.title} · ${w.type}</div><h2 style="margin:6px 0 4px">Registrar resultado</h2><p class="sm muted">${w.benchmark?`Benchmark: vale +${XP.benchmark} XP e entra no seu histórico.`:`Vale +${XP.result} XP.`}</p>
+  <label>Resultado</label><input id="r-score" placeholder="${ph}" value="${r.score||''}" inputmode="${w.score==='time'?'numeric':'decimal'}">
+  <label>Versão</label><div class="seg" id="r-cat"><button class="${(r.cat||m.cat)==='RX'?'on':''}" data-v="RX">RX</button><button class="${(r.cat||m.cat)==='Scaled'?'on':''}" data-v="Scaled">Scaled</button></div>
+  <label>Percepção de esforço · ${r.rpe||7}/10</label><input id="r-rpe" type="range" min="1" max="10" value="${r.rpe||7}" style="padding:0;accent-color:var(--accent)">
+  <label>Comentário (opcional)</label><input id="r-note" placeholder="como foi?" value="${r.note||''}">
+  <div style="height:14px"></div><button class="btn l" id="r-save">Salvar e publicar no feed</button>`);
+  $('#r-cat').onclick=e=>{const b=e.target.closest('button');if(!b)return;[...$('#r-cat').children].forEach(x=>x.classList.remove('on'));b.classList.add('on')};
+  $('#r-rpe').oninput=e=>{e.target.previousElementSibling.textContent=`Percepção de esforço · ${e.target.value}/10`};
+  $('#r-save').onclick=()=>{
+    const score=$('#r-score').value.trim();if(!score){toast('Coloque o resultado','o');return}
+    const cat=$('#r-cat .on').dataset.v,rpe=+$('#r-rpe').value,note=$('#r-note').value.trim();const isNew=!S.results[w.id];
+    let pr=false;
+    if(w.benchmark&&w.score==='time'){const prev=(m.bench[w.title]||[]).map(x=>toSec(x[1])).filter(Boolean);const s=toSec(score);if(s&&(!prev.length||s<Math.min(...prev)))pr=true;}
+    S.results[w.id]={score,cat,rpe,note,pr};
+    if(isNew){if(w.benchmark){m.bench[w.title]=m.bench[w.title]||[];m.bench[w.title].push([todayKey,score]);}
+      S.feed.unshift({id:'fr'+Date.now(),who:'me',kind:'result',txt:`fechou <b>${w.title}</b> em <b>${score}</b> ${cat}${note?' · "'+note+'"':''}${pr?' 🏆 PR':''}`,t:Date.now(),bumps:0});}
+    save();closeSheet();render();
+    if(isNew){addXP(w.benchmark?XP.benchmark:XP.result,w.benchmark?'benchmark registrado':'resultado registrado');if(pr)setTimeout(()=>addXP(XP.pr,`novo PR em ${w.title}!`),900);checkBadges()}else toast('Resultado atualizado');
+  };
+}
+const toSec=s=>{const p=String(s).split(':').map(Number);if(p.length===2&&!p.some(isNaN))return p[0]*60+p[1];return null};
+
+/* ---------- ATLETA · FEED ---------- */
+function viewFeed(){
+  const items=S.feed.slice(0,30).map(f=>{const a=f.who==='team'?{name:'Desafio',color:'#ff5a1f'}:byId(f.who);const on=S.bumped[f.id];return `<div class="item"><span class="av" style="background:${a.color}">${f.who==='team'?'⚑':inits(a.name)}</span><div class="t"><div class="txt"><b>${f.who==='me'?'Você':a.name}</b> ${f.txt}</div><div class="meta"><span>${ago(f.t)}</span><button class="${on?'on':''}" data-a="bump" data-v="${f.id}">👊 ${f.bumps+(on?1:0)}</button><button data-a="comment" data-v="${f.id}">💬 comentar</button></div></div></div>`}).join('');
+  return `<div class="row between" style="margin-bottom:12px"><h1>Feed do box</h1><span class="chip">👊 ${S.bumpDay.d===todayKey?S.bumpDay.n:0}/${XP.bumpCap/XP.bump} hoje</span></div><div class="list feed">${items}</div><p class="demo">Fist bump e comentário valem +${XP.bump} XP, até ${XP.bumpCap} XP por dia.</p>`;
+}
+function bump(id){if(S.bumped[id]){delete S.bumped[id];save();render();return}S.bumped[id]=1;if(S.bumpDay.d!==todayKey)S.bumpDay={d:todayKey,n:0};const f=S.feed.find(x=>x.id===id);if(f&&f.who!=='me'&&S.bumpDay.n<XP.bumpCap/XP.bump){S.bumpDay.n++;me().bumps++;save();render();addXP(XP.bump,'fist bump');checkBadges()}else{save();render()}}
+
+/* ---------- ATLETA · RANKING ---------- */
+function viewRanking(){
+  const t=S.rankTab;let rows='';
+  const fran=S.athletes.map(a=>({a,s:(a.bench.Fran||[]).slice(-1)[0]})).filter(x=>x.s).map(x=>({a:x.a,score:x.s[1],sec:toSec(x.s[1])}));
+  if(t==='rx'||t==='sc'){const cat=t==='rx'?'RX':'Scaled';const r=S.results[todayWod().id];rows=fran.filter(x=>x.a.cat===cat||(x.a.id==='me'&&r&&r.cat===cat)).sort((a,b)=>a.sec-b.sec).map((x,i)=>row(i,x.a,`${x.a.cat} · ${x.a.age} anos`,x.score)).join('')}
+  if(t==='ev'){const ev=[['a8','começou em agosto','+31%'],['a7','voltou de lesão','+24%'],['a6','Scaled → RX no Back Squat','+18%'],['a10','primeiro Fran sem pausa','+15%'],['a14','Snatch subiu 5 kg','+9%'],['me','já era RX','+4%']];rows=ev.map((e,i)=>row(i,byId(e[0]),e[1],e[2])).join('')}
+  if(t==='tm'){rows=Object.entries(S.teamXP).sort((a,b)=>b[1]-a[1]).map(([k,v],i)=>{const n=S.athletes.filter(a=>a.team===k).length;return `<div class="item ${me().team===k?'me':''}"><span class="pos">${i+1}</span><span class="av" style="background:${TEAMS[k][1]}">⚑</span><div class="t"><b>Time ${TEAMS[k][0]}</b><span>${n} atletas · ${Math.round(v/n)} XP por atleta</span></div><span class="sc">${v.toLocaleString('pt-BR')}</span></div>`}).join('')}
+  if(t==='xp'){rows=[...S.athletes].sort((a,b)=>b.xp-a.xp).slice(0,10).map((a,i)=>row(i,a,`nível ${levelProg(a.xp).name} · 🔥 ${a.streak} sem`,a.xp.toLocaleString('pt-BR'))).join('')}
+  return `<h1 style="margin-bottom:12px">Ranking</h1><div class="seg" style="margin-bottom:12px">${[['rx','Fran · RX'],['sc','Fran · Scaled'],['ev','Evolução do mês'],['tm','Times'],['xp','XP do mês']].map(x=>`<button class="${t===x[0]?'on':''}" data-a="rankTab" data-v="${x[0]}">${x[1]}</button>`).join('')}</div><div class="list lb">${rows||'<div class="empty">Ninguém ainda nessa categoria hoje.</div>'}</div>
+  <p class="demo">${t==='ev'?'Evolução compara o resultado de hoje com o anterior do próprio atleta. Quem está começando lidera aqui.':'Rankings são opcionais: dá para sair deles no perfil e manter o resto.'}</p>`;
+}
+const row=(i,a,sub,score)=>`<div class="item ${a.id==='me'?'me':''}"><span class="pos">${i+1}</span>${avatar(a)}<div class="t"><b>${a.id==='me'?'Você':a.name}</b><span>${sub}</span></div><span class="sc">${score}</span></div>`;
+
+/* ---------- ATLETA · PERFIL ---------- */
+function viewPerfil(){
+  const m=me(),lp=levelProg(m.xp),ctx=Object.assign({early:S.early},m);
+  const bd=BADGES.map(b=>`<div class="bd ${b[3](ctx)?'':'lk'}"><span class="e">${b[1]}</span>${b[2]}</div>`).join('');
+  const prs=Object.entries(m.prs).map(([k,v])=>`<div class="pr"><span>${k}</span><b>${v} kg</b></div>`).join('');
+  const bench=Object.entries(m.bench).map(([k,v])=>`<div class="pr"><span>${k} <span class="xs dim">· ${v.length}x</span></span><b>${v.slice(-1)[0][1]}</b></div>`).join('');
+  return `<div class="row" style="margin-bottom:14px">${avatar(m)}<div><h1>${m.name}</h1><div class="sm muted">${m.cat} · Time ${TEAMS[m.team][0]} · ${m.months} meses de box</div></div></div>
+  <div class="grid3" style="margin-bottom:12px"><div class="kpi"><div class="n lm">${m.checkins}</div><div class="l">check-ins</div></div><div class="kpi"><div class="n">${m.streak}</div><div class="l">semanas de streak</div></div><div class="kpi"><div class="n gd">${m.bumps}</div><div class="l">fist bumps dados</div></div></div>
+  <div class="card"><div class="row between"><h3>Nível ${lp.l+1} · ${lp.name}</h3><span class="sm muted">${m.xp.toLocaleString('pt-BR')} XP</span></div><div class="xp" style="margin:10px 0"><i style="width:${lp.pct}%"></i></div><div class="xs muted">${LEVELS.map((l,i)=>`<span style="${i<=lp.l?'color:var(--lime)':''}">${l[0]}</span>`).join(' · ')}</div></div>
+  <h3 style="margin:16px 0 8px">Badges · ${BADGES.filter(b=>b[3](ctx)).length}/${BADGES.length}</h3><div class="badges">${bd}</div>
+  <h3 style="margin:18px 0 4px">PRs</h3><div class="card">${prs}<button class="btn g sm" style="margin-top:10px" data-a="addpr">+ Registrar PR</button></div>
+  <h3 style="margin:16px 0 4px">Benchmarks</h3><div class="card">${bench||'<div class="empty">Nenhum benchmark ainda.</div>'}</div>
+  <div class="card"><div class="row between"><div><b>Plano ${m.plan}</b><div class="xs muted">R$ ${m.price}/mês · vence dia 10 · ${m.status==='ativo'?'<span class="lm">em dia</span>':'<span style="color:#ff8a8a">em atraso</span>'}</div></div><button class="btn g sm" data-a="pay">Pagar com Pix</button></div></div>
+  <div class="card"><div class="row between"><span class="sm">Aparecer nos rankings</span><input type="checkbox" checked style="width:auto;accent-color:var(--lime)" data-a="optout"></div><div class="row between" style="margin-top:10px"><span class="sm">Notificações (máx. 1 por dia)</span><input type="checkbox" checked style="width:auto;accent-color:var(--lime)"></div></div>
+  <p class="demo"><button data-a="switch">Trocar para gestão</button> · <button data-a="reset">restaurar dados</button></p>`;
+}
+
+/* =====================================================================
+   GESTÃO
+   ===================================================================== */
+const riskList=()=>S.athletes.filter(a=>a.id!=='me'&&a.lastCheckin>=7&&a.plan!=='Experimental');
+function admPainel(){
+  const act=S.athletes.filter(a=>a.plan!=='Experimental'),ci=S.classes.reduce((n,c)=>n+c.att.length,0),cap=S.classes.reduce((n,c)=>n+c.cap,0);
+  const late=S.athletes.filter(a=>a.status==='atrasado'),risk=riskList(),mrr=act.reduce((n,a)=>n+a.price,0);
+  const w=todayWod();const res=Object.keys(S.results).length+5;
+  return `<div class="kicker">${fmtDate(TODAY)}</div><h1 style="margin-bottom:12px">${BOX.name}</h1>
+  <div class="grid2" style="margin-bottom:12px"><div class="kpi"><div class="n">${act.length}</div><div class="l">alunos ativos</div></div><div class="kpi good"><div class="n">${ci}</div><div class="l">check-ins hoje · ${Math.round(ci/cap*100)}% de ocupação</div></div><div class="kpi ${late.length?'warn':''}"><div class="n">${late.length}</div><div class="l">em atraso · R$ ${late.reduce((n,a)=>n+a.price,0)}</div></div><div class="kpi ${risk.length?'warn':''}"><div class="n">${risk.length}</div><div class="l">em risco · 7+ dias sem treinar</div></div></div>
+  <div class="card"><div class="row between"><div><div class="xs muted">WOD de hoje</div><h3>${w.title} · ${w.type}</h3></div><span class="tag ${w.published?'lime':'red'}">${w.published?'publicado':'rascunho'}</span></div><div class="xs muted" style="margin-top:8px">${res} resultados registrados · ${S.classes.filter(c=>c.att.length>=c.cap).length} turma lotada</div></div>
+  <div class="card"><div class="row between"><h3>Receita</h3><span class="sm muted">MRR</span></div><div class="big lm" style="margin:6px 0">R$ ${mrr.toLocaleString('pt-BR')}</div><div class="xs muted">${act.filter(a=>a.plan==='Ilimitado').length} ilimitado · ${act.filter(a=>a.plan==='3x semana').length} 3x semana · ${S.athletes.filter(a=>a.plan==='Experimental').length} experimental</div></div>
+  <h3 style="margin:14px 0 8px">Ação do dia</h3><div class="list">${risk.slice(0,3).map(a=>`<div class="item tap" data-a="aluno" data-v="${a.id}">${avatar(a)}<div class="t"><b>${a.name}</b><span>${a.lastCheckin} dias sem treinar · ${a.plan}</span></div><button class="btn g sm" data-a="msg" data-v="${a.id}">💬</button></div>`).join('')}${late.map(a=>`<div class="item tap" data-a="aluno" data-v="${a.id}">${avatar(a)}<div class="t"><b>${a.name}</b><span>mensalidade atrasada · R$ ${a.price}</span></div><button class="btn g sm" data-a="cobrar" data-v="${a.id}">Pix</button></div>`).join('')}</div>
+  <div class="card" style="margin-top:12px"><h3>Times · desafio de outubro</h3><div style="margin-top:10px">${Object.entries(S.teamXP).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`<div class="team"><span class="nm" style="color:${TEAMS[k][1]}">${TEAMS[k][0]}</span><div class="xp"><i style="width:${Math.round(v/13000*100)}%;background:${TEAMS[k][1]}"></i></div><span class="v">${v.toLocaleString('pt-BR')}</span></div>`).join('')}</div></div>
+  <p class="demo">Alerta de risco vai só para o gestor e coaches, nunca para o feed. · <button data-a="switch">Trocar para atleta</button></p>`;
+}
+function admWod(){
+  const w=todayWod();
+  const hist=S.wods.filter(x=>x.id!==w.id).map(x=>`<div class="item tap" data-a="usewod" data-v="${x.id}"><div class="t"><b>${x.title} <span class="xs dim">· ${x.type}</span></b><span>${x.date.split('-').reverse().slice(0,2).join('/')} · ${x.desc.split('\n')[0]}</span></div><span class="muted">↻</span></div>`).join('');
+  return `<h1 style="margin-bottom:12px">WOD do dia</h1>
+  <div class="card"><label>Nome</label><input id="w-title" value="${w.title}"><div class="grid2"><div><label>Tipo</label><select id="w-type">${['For time','AMRAP 20','EMOM','Strength','Chipper','Hero WOD'].map(t=>`<option ${w.type===t?'selected':''}>${t}</option>`).join('')}</select></div><div><label>Pontuação</label><select id="w-score">${[['time','Tempo'],['rounds','Rounds + reps'],['reps','Reps'],['load','Carga']].map(t=>`<option value="${t[0]}" ${w.score===t[0]?'selected':''}>${t[1]}</option>`).join('')}</select></div></div>
+  <label>Treino</label><textarea id="w-desc" rows="5">${w.desc}</textarea><label>Scaled</label><input id="w-scaled" value="${w.scaled||''}" placeholder="versão scaled">
+  <div class="row between" style="margin-top:14px"><span class="sm">Benchmark (vale +${XP.benchmark} XP)</span><input type="checkbox" id="w-bench" ${w.benchmark?'checked':''} style="width:auto;accent-color:var(--lime)"></div>
+  <div style="height:14px"></div><button class="btn l" data-a="savewod">${w.published?'Atualizar WOD publicado':'Publicar para os atletas'}</button></div>
+  <h3 style="margin:16px 0 8px">Reaproveitar treino</h3><div class="list">${hist}</div>
+  <p class="demo">Benchmarks e Hero WODs prontos com um toque. Vídeos dos movimentos entram na próxima versão.</p>`;
+}
+function saveWod(){const w=todayWod();w.title=$('#w-title').value.trim()||w.title;w.type=$('#w-type').value;w.score=$('#w-score').value;w.desc=$('#w-desc').value;w.scaled=$('#w-scaled').value;w.benchmark=$('#w-bench').checked;w.published=true;S.notes.unshift({t:Date.now(),txt:`WOD de hoje publicado: ${w.title}`});save();render();toast('<b>WOD publicado.</b> Atletas notificados.')}
+function useWod(id){const src=S.wods.find(x=>x.id===id),w=todayWod();Object.assign(w,{title:src.title,type:src.type,desc:src.desc,score:src.score,benchmark:src.benchmark,scaled:src.scaled||'',published:false});save();render();toast(`${src.title} carregado. Revise e publique.`,'o')}
+
+function admTurmas(){
+  return `<h1 style="margin-bottom:12px">Turmas de hoje</h1><div class="list">${S.classes.map(c=>`<div class="item tap" data-a="turma" data-v="${c.id}"><div style="font-family:var(--display);font-size:24px;width:58px">${c.time}</div><div class="t"><b>${c.att.length}/${c.cap} · ${c.coach}</b><span>${c.att.length>=c.cap?'lotada':(c.cap-c.att.length)+' vagas'}${c.wait&&c.wait.length?` · ${c.wait.length} na fila`:''}</span></div><div class="xp ${c.att.length>=c.cap?'o':''}" style="width:70px"><i style="width:${Math.round(c.att.length/c.cap*100)}%"></i></div></div>`).join('')}</div>
+  <p class="demo">Toque na turma para ver a lista, marcar presença ou liberar alguém da fila.</p>`;
+}
+function sheetTurma(id){
+  const c=S.classes.find(x=>x.id===id);
+  const li=c.att.map(a=>{const x=byId(a);return `<div class="item">${avatar(x,'s')}<div class="t"><b>${x.id==='me'?'Rafa C. (você)':x.name}</b><span>${x.cat} · ${x.plan}</span></div><button class="btn g sm" data-a="rmatt" data-v="${c.id}|${a}">remover</button></div>`}).join('');
+  const w=(c.wait||[]).map(a=>{const x=byId(a);return `<div class="item" style="border-color:var(--blue)">${avatar(x,'s')}<div class="t"><b>${x.name}</b><span>na fila</span></div><button class="btn l sm" data-a="promote" data-v="${c.id}|${a}">liberar</button></div>`}).join('');
+  sheet(`<div class="row between"><h2>${c.time} · ${c.coach}</h2><span class="tag ${c.att.length>=c.cap?'red':'lime'}">${c.att.length}/${c.cap}</span></div><div class="list" style="margin-top:12px">${li}</div>${w?`<h3 style="margin:14px 0 8px">Fila de espera</h3><div class="list">${w}</div>`:''}<div style="height:12px"></div><button class="btn g" data-a="addatt" data-v="${c.id}">+ Adicionar atleta</button>`);
+}
+function admAlunos(){
+  const f=S.alunoFilter,q=(S.q||'').toLowerCase();
+  let list=S.athletes.filter(a=>a.name.toLowerCase().includes(q));
+  if(f==='risco')list=list.filter(a=>a.lastCheckin>=7);if(f==='atraso')list=list.filter(a=>a.status==='atrasado');if(f==='novos')list=list.filter(a=>a.months<=3);
+  return `<h1 style="margin-bottom:12px">Alunos · ${S.athletes.length}</h1><div class="search"><input placeholder="buscar" id="q" value="${S.q||''}"><button class="btn p sm" data-a="novoaluno">+ Novo</button></div>
+  <div class="seg" style="margin-bottom:12px">${[['todos','Todos'],['risco','Em risco'],['atraso','Em atraso'],['novos','Novos']].map(x=>`<button class="${f===x[0]?'on':''}" data-a="alunoFilter" data-v="${x[0]}">${x[1]}</button>`).join('')}</div>
+  <div class="list">${list.map(a=>`<div class="item tap" data-a="aluno" data-v="${a.id}">${avatar(a)}<div class="t"><b>${a.name} <span class="xs dim">· ${a.cat}</span></b><span>${a.plan} · ${a.lastCheckin===0?'treinou hoje':a.lastCheckin+' dias sem treinar'}</span></div>${a.status==='atrasado'?'<span class="tag red">atraso</span>':a.lastCheckin>=7?'<span class="tag gold">risco</span>':`<span class="tag">🔥 ${a.streak}</span>`}</div>`).join('')||'<div class="empty">Nenhum aluno aqui.</div>'}</div>`;
+}
+function sheetAluno(id){
+  const a=byId(id),lp=levelProg(a.xp);
+  sheet(`<div class="row">${avatar(a)}<div><h2>${a.name}</h2><div class="sm muted">${a.cat} · ${a.age} anos · Time ${TEAMS[a.team][0]} · ${a.months} meses</div></div></div>
+  <div class="grid3" style="margin:14px 0"><div class="kpi"><div class="n ${a.lastCheckin>=7?'':'lm'}" style="${a.lastCheckin>=7?'color:#ff8a8a':''}">${a.lastCheckin}</div><div class="l">dias sem treinar</div></div><div class="kpi"><div class="n">${a.streak}</div><div class="l">streak</div></div><div class="kpi"><div class="n">${a.checkins}</div><div class="l">check-ins</div></div></div>
+  <div class="card"><div class="row between"><b>${a.plan}</b><span class="${a.status==='ativo'?'lm':''}" style="${a.status!=='ativo'?'color:#ff8a8a':''}">${a.plan==='Experimental'?'aula experimental':a.status==='ativo'?'R$ '+a.price+' · em dia':'R$ '+a.price+' · atrasado'}</span></div><div class="xs muted" style="margin-top:6px">Nível ${lp.name} · ${a.xp.toLocaleString('pt-BR')} XP</div></div>
+  <div class="card"><h3>PRs</h3>${Object.entries(a.prs).map(([k,v])=>`<div class="pr"><span>${k}</span><b>${v} kg</b></div>`).join('')||'<div class="empty">Sem PRs ainda.</div>'}</div>
+  <div class="grid2"><button class="btn g" data-a="msg" data-v="${a.id}">💬 WhatsApp</button>${a.status==='atrasado'?`<button class="btn l" data-a="cobrar" data-v="${a.id}">Cobrar via Pix</button>`:a.plan==='Experimental'?`<button class="btn l" data-a="matricular" data-v="${a.id}">Matricular</button>`:`<button class="btn g" data-a="congelar" data-v="${a.id}">Congelar plano</button>`}</div>`);
+}
+function admFin(){
+  const act=S.athletes.filter(a=>a.plan!=='Experimental'),mrr=act.reduce((n,a)=>n+a.price,0),late=S.athletes.filter(a=>a.status==='atrasado');
+  const paid=mrr-late.reduce((n,a)=>n+a.price,0);
+  return `<h1 style="margin-bottom:12px">Caixa</h1><div class="grid2" style="margin-bottom:12px"><div class="kpi good"><div class="n">R$ ${paid.toLocaleString('pt-BR')}</div><div class="l">recebido em outubro</div></div><div class="kpi ${late.length?'warn':''}"><div class="n">R$ ${late.reduce((n,a)=>n+a.price,0)}</div><div class="l">em atraso · ${late.length} alunos</div></div><div class="kpi"><div class="n">R$ ${mrr.toLocaleString('pt-BR')}</div><div class="l">MRR previsto</div></div><div class="kpi"><div class="n">${Math.round(paid/mrr*100)}%</div><div class="l">adimplência</div></div></div>
+  <div class="card"><h3>Por plano</h3><table class="table" style="margin-top:8px">${[['Ilimitado',189],['3x semana',149]].map(p=>{const n=act.filter(a=>a.plan===p[0]).length;return `<tr><td>${p[0]} <span class="dim xs">· ${n} alunos</span></td><td>R$ ${(n*p[1]).toLocaleString('pt-BR')}</td></tr>`}).join('')}<tr><td>Pix e cartão recorrente</td><td class="lm">ativo</td></tr></table></div>
+  <h3 style="margin:14px 0 8px">Em atraso</h3><div class="list">${late.map(a=>`<div class="item">${avatar(a)}<div class="t"><b>${a.name}</b><span>${a.plan} · R$ ${a.price} · venceu dia 10</span></div><button class="btn l sm" data-a="cobrar" data-v="${a.id}">Cobrar</button></div>`).join('')||'<div class="empty">Ninguém em atraso. 🎉</div>'}</div>
+  <p class="demo">Na versão real, o acesso ao app segue o pagamento: atrasou, o check-in avisa o aluno e o gestor.</p>`;
+}
+
+/* =====================================================================
+   AÇÕES (delegação de eventos)
+   ===================================================================== */
+document.addEventListener('click',e=>{
+  const b=e.target.closest('[data-a]');if(!b)return;const a=b.dataset.a,v=b.dataset.v;
+  const acts={
+    login(){S.role=v;S.seen=1;if(!S.badgesHad)checkBadges();save();render()},
+    switch(){S.role=S.role==='atleta'?'gestao':'atleta';save();render();toast(`Agora você está no modo <b>${S.role==='atleta'?'atleta':'gestão'}</b>`,'o')},
+    tab(){S.tab=v;save();render()},admTab(){S.admTab=v;save();render()},rankTab(){S.rankTab=v;save();render()},alunoFilter(){S.alunoFilter=v;save();render()},
+    reset(){if(confirm('Restaurar todos os dados de demonstração?'))reset()},
+    checkin(){doCheckin(v)},result(){sheetResult()},bump(){bump(v)},
+    comment(){sheet(`<h2>Comentar</h2><input id="cm" placeholder="manda um incentivo" style="margin-top:10px"><div style="height:12px"></div><button class="btn l" id="cm-ok">Enviar</button>`);$('#cm-ok').onclick=()=>{const t=$('#cm').value.trim();closeSheet();if(t){const f=S.feed.find(x=>x.id===v);f.txt+=`<br><span class="xs muted">💬 você: ${t}</span>`;if(f.who!=='me'&&S.bumpDay.n<XP.bumpCap/XP.bump){S.bumpDay.n++;me().bumps++;addXP(XP.bump,'comentário')}save();render()}}},
+    goal(){sheet(`<h2>Meta semanal</h2><p class="sm muted">Quantas vezes por semana você quer treinar? O streak conta a partir disso.</p><div class="seg" style="margin:14px 0">${[2,3,4,5].map(n=>`<button class="${S.weekGoal===n?'on':''}" data-a="setgoal" data-v="${n}">${n}x</button>`).join('')}</div>`)},
+    setgoal(){S.weekGoal=+v;save();closeSheet();render();toast(`Meta: ${v} treinos por semana`)},
+    freeze(){sheet(`<h2>Congelar streak</h2><p class="sm muted">Lesão, viagem ou doença? O streak pausa e não zera. O coach recebe um aviso para falar com você.</p><label>Motivo</label><select id="fz"><option>Viagem</option><option>Lesão</option><option>Doença</option><option>Outro</option></select><label>Por quantos dias</label><select id="fzd"><option>7</option><option>14</option><option>21</option></select><div style="height:14px"></div><button class="btn p" id="fz-ok">Congelar</button>`);$('#fz-ok').onclick=()=>{S.notes.unshift({t:Date.now(),txt:`Streak congelado: ${$('#fz').value}, ${$('#fzd').value} dias`});save();closeSheet();toast(`❄ Streak congelado por ${$('#fzd').value} dias. Volta quando você voltar.`,'o')}},
+    invite(){const link=location.origin+location.pathname+'?exp=rafa';sheet(`<h2>Convidar amigo</h2><p class="sm muted">Seu link de aula experimental. Quando o amigo vier, você ganha +${XP.referral} XP e o box ganha um aluno.</p><input value="${link}" readonly style="margin:12px 0"><button class="btn l" id="cp">Copiar link</button>`);$('#cp').onclick=()=>{try{navigator.clipboard.writeText(link)}catch(e){}closeSheet();toast('Link copiado. Manda no WhatsApp 📲')}},
+    addpr(){sheet(`<h2>Registrar PR</h2><label>Movimento</label><select id="pr-m">${['Clean','Back Squat','Deadlift','Snatch','Front Squat','Clean & Jerk','Press','Bench'].map(x=>`<option>${x}</option>`).join('')}</select><label>Carga (kg)</label><input id="pr-v" inputmode="decimal" placeholder="ex. 105"><div style="height:14px"></div><button class="btn l" id="pr-ok">Salvar</button>`);$('#pr-ok').onclick=()=>{const m=me(),k=$('#pr-m').value,n=parseFloat($('#pr-v').value);if(!n){toast('Coloque a carga','o');return}const old=m.prs[k]||0;closeSheet();if(n>old){m.prs[k]=n;S.feed.unshift({id:'fp'+Date.now(),who:'me',kind:'pr',txt:`bateu PR no <b>${k}: ${n} kg</b> 🏆`,t:Date.now(),bumps:0});save();render();addXP(XP.pr,`novo PR em ${k}`)}else toast(`Seu PR atual em ${k} é ${old} kg. Continua!`,'o')}},
+    pay(){toast('Pix copiado. Na versão real abre o app do banco.','o')},optout(){toast(b.checked?'Você voltou aos rankings':'Você saiu dos rankings. XP e badges continuam.','o')},
+    notes(){const n=S.role==='atleta'?S.notes:[...riskList().map(a=>({t:Date.now()-a.lastCheckin*864e5,txt:`${a.name} está há ${a.lastCheckin} dias sem treinar`})),...S.athletes.filter(a=>a.status==='atrasado').map(a=>({t:Date.now(),txt:`${a.name} com mensalidade atrasada (R$ ${a.price})`}))];sheet(`<h2>Avisos</h2><div class="list" style="margin-top:12px">${n.map(x=>`<div class="item"><div class="t"><b>${x.txt}</b><span>${ago(x.t)}</span></div></div>`).join('')||'<div class="empty">Nada por aqui. Bom sinal.</div>'}</div>`)},
+    savewod(){saveWod()},usewod(){useWod(v)},turma(){sheetTurma(v)},
+    rmatt(){const[c,a]=v.split('|');const cl=S.classes.find(x=>x.id===c);cl.att=cl.att.filter(x=>x!==a);if(a==='me')S.myCheckin=null;save();sheetTurma(c);render()},
+    promote(){const[c,a]=v.split('|');const cl=S.classes.find(x=>x.id===c);cl.wait=cl.wait.filter(x=>x!==a);if(cl.att.length<cl.cap)cl.att.push(a);if(a==='me'){S.myWait=null;S.myCheckin=c}save();sheetTurma(c);render();toast(`${byId(a).name} liberado para as ${cl.time}`)},
+    addatt(){const cl=S.classes.find(x=>x.id===v);const opts=S.athletes.filter(a=>!cl.att.includes(a.id));sheet(`<h2>Adicionar às ${cl.time}</h2><div class="list" style="margin-top:12px">${opts.map(a=>`<div class="item tap" data-a="doadd" data-v="${v}|${a.id}">${avatar(a,'s')}<div class="t"><b>${a.name}</b><span>${a.plan}</span></div></div>`).join('')}</div>`)},
+    doadd(){const[c,a]=v.split('|');const cl=S.classes.find(x=>x.id===c);if(cl.att.length>=cl.cap){toast('Turma lotada. Vai para a fila.','o');cl.wait=cl.wait||[];cl.wait.push(a)}else cl.att.push(a);if(a==='me')S.myCheckin=c;save();sheetTurma(c);render()},
+    aluno(){sheetAluno(v)},msg(){closeSheet();toast(`Abrindo WhatsApp de ${byId(v).name} com a mensagem pronta 📲`,'o')},
+    cobrar(){const a=byId(v);closeSheet();toast(`Cobrança Pix de R$ ${a.price} enviada para ${a.name}`,'o');setTimeout(()=>{a.status='ativo';save();render();toast(`<b>${a.name} pagou.</b> Acesso liberado.`)},2500)},
+    matricular(){const a=byId(v);a.plan='3x semana';a.price=149;a.months=1;closeSheet();save();render();toast(`<b>${a.name} matriculado.</b> App liberado e boas-vindas enviadas.`)},
+    congelar(){closeSheet();toast('Plano congelado por 30 dias. Streak pausado.','o')},
+    novoaluno(){sheet(`<h2>Novo aluno</h2><label>Nome</label><input id="na-n" placeholder="nome"><label>Plano</label><select id="na-p"><option>Experimental</option><option>3x semana</option><option>Ilimitado</option></select><label>Categoria</label><select id="na-c"><option>Scaled</option><option>RX</option></select><div style="height:14px"></div><button class="btn l" id="na-ok">Cadastrar</button>`);$('#na-ok').onclick=()=>{const n=$('#na-n').value.trim();if(!n){toast('Coloque o nome','o');return}const p=$('#na-p').value;const t=Object.keys(TEAMS)[S.athletes.length%4];S.athletes.push({id:'a'+Date.now(),name:n,cat:$('#na-c').value,age:30,team:t,xp:0,streak:0,plan:p,price:p==='Ilimitado'?189:p==='3x semana'?149:0,status:'ativo',lastCheckin:0,months:0,bench:{},prs:{},color:COLORS[S.athletes.length%COLORS.length],checkins:0,bumps:0});save();closeSheet();render();toast(`<b>${n}</b> cadastrado no Time ${TEAMS[t][0]}.`)}},
+  };
+  if(acts[a])acts[a]();
+});
+document.addEventListener('input',e=>{if(e.target.id==='q'){S.q=e.target.value;save();const pos=e.target.selectionStart;render();const i=$('#q');if(i){i.focus();i.setSelectionRange(pos,pos)}}});
+
+load();{const r=new URLSearchParams(location.search).get('role');if(r){S.role=r==='gestao'?'gestao':'atleta';save()}}render();
+if('serviceWorker' in navigator&&location.protocol.startsWith('http')){navigator.serviceWorker.register('./sw.js').catch(()=>{})}
+</script>
+</body>
+</html>
