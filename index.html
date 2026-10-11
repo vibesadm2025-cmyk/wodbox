@@ -268,7 +268,7 @@ function viewLogin(){
 /* ---------- ATLETA · HOJE ---------- */
 function viewHoje(){
   const m=me(),w=todayWod(),lp=levelProg(m.xp),res=S.results[w.id];
-  const cls=S.classes.map(c=>{const full=c.att.length>=c.cap,mine=S.myCheckin===c.id,wait=S.myWait===c.id;return `<button class="cls ${full?'full':''} ${mine?'mine':''} ${wait?'wait':''}" data-a="checkin" data-v="${c.id}"><b>${c.time}</b><span>${mine?'✓ você vai':wait?'na fila':full?'lotada · fila':(c.cap-c.att.length)+' vagas'}</span></button>`}).join('');
+  const cls=S.classes.map(c=>{const full=c.att.length>=c.cap,mine=S.myCheckin===c.id,wait=S.myWait===c.id;return `<button class="cls ${full?'full':''} ${mine?'mine':''} ${wait?'wait':''}" data-a="checkin" data-v="${c.id}"><b>${c.time}</b><span>${mine?'✓ você vai':wait?'na fila':full?'lotada · fila':(c.cap-c.att.length)+(c.cap-c.att.length===1?' vaga':' vagas')}</span></button>`}).join('');
   const wk=S.weekDone.map((d,i)=>`<i class="${d?'ok':''} ${i===TODAY.getDay()-1||(TODAY.getDay()===0&&i===6)?'now':''}">${d?'🔥':''}</i>`).join('');
   return `<div class="row between" style="margin-bottom:12px"><div><div class="kicker">${fmtDate(TODAY)}</div><h1>Fala, ${m.name.split(' ')[0]}.</h1></div><div style="text-align:right"><div class="big lm">🔥 ${m.streak}</div><div class="xs muted">semanas de streak</div></div></div>
   <div class="wodcard"><div class="row between"><span class="tag lime">${w.type}</span>${w.benchmark?'<span class="tag gold">Benchmark</span>':''}</div><h2 style="margin-top:10px">${w.title}</h2><pre>${w.desc}</pre>${w.cap?`<div class="xs dim" style="margin-top:6px">${w.cap}</div>`:''}
@@ -393,7 +393,7 @@ function saveWod(){const w=todayWod();w.title=$('#w-title').value.trim()||w.titl
 function useWod(id){const src=S.wods.find(x=>x.id===id),w=todayWod();Object.assign(w,{title:src.title,type:src.type,desc:src.desc,score:src.score,benchmark:src.benchmark,scaled:src.scaled||'',published:false});save();render();toast(`${src.title} carregado. Revise e publique.`,'o')}
 
 function admTurmas(){
-  return `<h1 style="margin-bottom:12px">Turmas de hoje</h1><div class="list">${S.classes.map(c=>`<div class="item tap" data-a="turma" data-v="${c.id}"><div style="font-family:var(--display);font-size:24px;width:58px">${c.time}</div><div class="t"><b>${c.att.length}/${c.cap} · ${c.coach}</b><span>${c.att.length>=c.cap?'lotada':(c.cap-c.att.length)+' vagas'}${c.wait&&c.wait.length?` · ${c.wait.length} na fila`:''}</span></div><div class="xp ${c.att.length>=c.cap?'o':''}" style="width:70px"><i style="width:${Math.round(c.att.length/c.cap*100)}%"></i></div></div>`).join('')}</div>
+  return `<h1 style="margin-bottom:12px">Turmas de hoje</h1><div class="list">${S.classes.map(c=>`<div class="item tap" data-a="turma" data-v="${c.id}"><div style="font-family:var(--display);font-size:24px;width:58px">${c.time}</div><div class="t"><b>${c.att.length}/${c.cap} · ${c.coach}</b><span>${c.att.length>=c.cap?'lotada':(c.cap-c.att.length)+(c.cap-c.att.length===1?' vaga':' vagas')}${c.wait&&c.wait.length?` · ${c.wait.length} na fila`:''}</span></div><div class="xp ${c.att.length>=c.cap?'o':''}" style="width:70px"><i style="width:${Math.round(c.att.length/c.cap*100)}%"></i></div></div>`).join('')}</div>
   <p class="demo">Toque na turma para ver a lista, marcar presença ou liberar alguém da fila.</p>`;
 }
 function sheetTurma(id){
@@ -461,7 +461,7 @@ document.addEventListener('click',e=>{
 });
 document.addEventListener('input',e=>{if(e.target.id==='q'){S.q=e.target.value;save();const pos=e.target.selectionStart;render();const i=$('#q');if(i){i.focus();i.setSelectionRange(pos,pos)}}});
 
-load();{const r=new URLSearchParams(location.search).get('role');if(r){S.role=r==='gestao'?'gestao':'atleta';save()}}render();
+load();{const r=new URLSearchParams(location.search).get('role');if(r){S.role=r==='gestao'?'gestao':'atleta';const t=new URLSearchParams(location.search).get('tab');if(t){if(S.role==='atleta')S.tab=t;else S.admTab=t}save()}}render();
 if('serviceWorker' in navigator&&location.protocol.startsWith('http')){navigator.serviceWorker.register('./sw.js').catch(()=>{})}
 </script>
 </body>
