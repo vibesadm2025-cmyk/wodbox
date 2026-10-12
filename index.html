@@ -124,6 +124,28 @@ hr{border:0;border-top:1px solid var(--line);margin:14px 0}
 .demo{font-size:11px;color:var(--dim);text-align:center;margin-top:18px;line-height:1.5}
 .demo button{color:var(--muted);text-decoration:underline}
 .table{width:100%;border-collapse:collapse;font-size:13px}.table td{padding:9px 4px;border-bottom:1px solid var(--line)}.table td:last-child{text-align:right;font-weight:600}
+
+/* ---- camada social ---- */
+.photo{height:170px;border-radius:14px;margin-top:10px;display:grid;place-items:center;font-size:56px;position:relative;overflow:hidden;border:1px solid rgba(255,255,255,.06)}
+.photo::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 55%,rgba(0,0,0,.55));pointer-events:none}
+.photo span{position:absolute;left:12px;bottom:10px;font-size:12px;color:#fff;font-weight:600;z-index:1;text-shadow:0 1px 8px #000}
+.ph1{background:linear-gradient(135deg,#1f2a10,#4e6b12 60%,#c6ff3d)}.ph2{background:linear-gradient(135deg,#2a1208,#8a2d0e 60%,#ff5a1f)}.ph3{background:linear-gradient(135deg,#0b2130,#145a73 60%,#4cc9f0)}.ph4{background:linear-gradient(135deg,#2b220a,#8a6a12 60%,#ffcc4d)}.ph5{background:linear-gradient(135deg,#1a1a1f,#3a3a44 60%,#9a9aa8)}
+.boxtag{display:inline-flex;align-items:center;gap:4px;font-size:10.5px;color:var(--muted);background:var(--panel2);border:1px solid var(--line);border-radius:999px;padding:2px 8px;margin-left:6px;vertical-align:middle;font-weight:600}
+.boxtag.home{color:var(--lime);border-color:rgba(198,255,61,.35)}
+.who{display:inline-flex;align-items:center;cursor:pointer}.item .t .who,.item .t .boxtag{display:inline-flex;margin-top:0}.item .t .who b{display:inline}
+.follow{border-radius:999px;padding:8px 14px;font-size:12.5px;font-weight:700;background:var(--lime);color:var(--lime-ink);white-space:nowrap}
+.follow.on{background:transparent;border:1px solid var(--line);color:var(--muted)}
+.hscroll{display:flex;gap:10px;overflow-x:auto;scrollbar-width:none;padding:2px 16px 6px;margin:0 -16px}.hscroll::-webkit-scrollbar{display:none}
+.pcard{flex:0 0 150px;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:14px 12px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:6px}
+.pcard .av{width:48px;height:48px;font-size:15px}.pcard b{font-size:13px;line-height:1.2}.pcard small{font-size:11px;color:var(--muted);line-height:1.3}
+.recap{background:linear-gradient(150deg,#1b2410,#0f0f12 60%);border:1px solid rgba(198,255,61,.35);border-radius:20px;padding:16px;margin-bottom:12px;position:relative;overflow:hidden}
+.recap::before{content:"";position:absolute;right:-30px;top:-30px;width:140px;height:140px;border-radius:50%;background:radial-gradient(circle,rgba(198,255,61,.25),transparent 70%)}
+.recap .nums{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:12px 0}
+.recap .nums div{text-align:center}.recap .nums b{display:block;font-family:var(--display);font-size:26px;color:var(--lime);letter-spacing:.03em}.recap .nums small{font-size:10px;color:var(--muted);letter-spacing:.04em;text-transform:uppercase}
+.stats3{display:flex;gap:18px;margin-top:6px}.stats3 div{font-size:12px;color:var(--muted)}.stats3 b{display:block;font-family:var(--display);font-size:22px;color:var(--ink);letter-spacing:.03em}
+.duel{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px;text-align:center}
+.duel .n{font-family:var(--display);font-size:30px;letter-spacing:.03em}.duel .vs{font-family:var(--display);font-size:18px;color:var(--dim)}.duel small{display:block;font-size:11px;color:var(--muted)}
+.verified{color:var(--blue);font-size:12px}
 </style>
 </head>
 <body>
@@ -137,7 +159,7 @@ hr{border:0;border-top:1px solid var(--line);margin:14px 0}
    Tudo que é "estado" fica em localStorage (chave STORE). Os dados base
    (atletas, WODs, turmas) estão em DATA e são regenerados a cada reset.
    ===================================================================== */
-const STORE='wodbox-mvp-v1';
+const STORE='wodbox-mvp-v2';
 const BOX={name:'Gladys 27', city:'Vitória · ES'};
 const TODAY=new Date(); const todayKey=TODAY.toISOString().slice(0,10);
 const fmtDate=d=>d.toLocaleDateString('pt-BR',{weekday:'short',day:'2-digit',month:'short'}).replace('.','');
@@ -146,6 +168,9 @@ const XP={checkin:10,result:15,benchmark:30,pr:50,week:40,bump:2,bumpCap:10,refe
 const LEVELS=[['Rookie',0],['Atleta',500],['Veterano',1500],['Elite',3500],['Lenda do box',7500]];
 const TEAMS={vermelho:['Vermelho','#ff5a1f'],preto:['Preto','#9a9a9a'],lima:['Lima','#c6ff3d'],azul:['Azul','#4cc9f0']};
 const COLORS=['#c6ff3d','#4cc9f0','#ffcc4d','#ff5a1f','#f472b6','#a78bfa','#34d399','#fb923c'];
+const BOXES=[{id:'g27',name:'Gladys 27',city:'Vitória · ES',members:112},{id:'pdc',name:'CF Praia do Canto',city:'Vitória · ES',members:168},{id:'bsf',name:'Box Serra Forte',city:'Serra · ES',members:94},{id:'avv',name:'Arena Vila Velha',city:'Vila Velha · ES',members:140}];
+const boxOf=a=>BOXES.find(b=>b.id===a.box)||BOXES[0];
+const handle=n=>n.normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase().replace(/[^a-z]+/g,'.').replace(/^\.|\.$/g,'');
 
 function mkAthletes(){
   const raw=[
@@ -166,7 +191,13 @@ function mkAthletes(){
     ['a15','Vitor S.','Scaled',31,'lima',300,1,'Experimental',0,'ativo',0,0,{},{}],
     ['a16','Dani F.','RX',29,'azul',2010,5,'Ilimitado',189,'ativo',16,18,{Fran:[['2026-06-01','6:58']]},{'Clean':80,'Back Squat':110,'Deadlift':140,'Snatch':55}],
   ];
-  return raw.map((r,i)=>({id:r[0],name:r[1],cat:r[2],age:r[3],team:r[4],xp:r[5],streak:r[6],plan:r[7],price:r[8],status:r[9],lastCheckin:r[10],months:r[11],bench:r[12],prs:r[13],color:COLORS[i%COLORS.length],checkins:r[11]*11+Math.floor(r[5]/60),bumps:Math.floor(r[5]/40)}));
+  return raw.map((r,i)=>({id:r[0],name:r[1],cat:r[2],age:r[3],team:r[4],xp:r[5],streak:r[6],plan:r[7],price:r[8],status:r[9],lastCheckin:r[10],months:r[11],bench:r[12],prs:r[13],color:COLORS[i%COLORS.length],checkins:r[11]*11+Math.floor(r[5]/60),bumps:Math.floor(r[5]/40),box:'g27',followers:18+i*5,handle:handle(r[1])}));
+}
+function mkOthers(){
+  const raw=[['b1','Thi Nogueira','RX',29,'pdc',4210,14,{Fran:[['2026-09-20','4:58']]},{'Clean':120,'Back Squat':160,'Deadlift':210,'Snatch':90}],['b2','Lari Campos','RX',31,'pdc',3650,9,{Fran:[['2026-09-20','5:40']]},{'Clean':85,'Back Squat':120,'Deadlift':150,'Snatch':60}],['b3','Pedro Assis','Scaled',40,'pdc',1120,3,{Fran:[['2026-09-20','8:05']]},{'Clean':70,'Back Squat':100,'Deadlift':130,'Snatch':45}],['b4','Jú Ferraz','RX',27,'pdc',2890,6,{Fran:[['2026-09-20','6:22']]},{'Clean':78,'Back Squat':110,'Deadlift':140,'Snatch':55}],
+  ['c1','Mateus Reis','RX',34,'bsf',3310,12,{Fran:[['2026-08-15','5:31']]},{'Clean':115,'Back Squat':165,'Deadlift':220,'Snatch':85}],['c2','Aline Prado','RX',36,'bsf',2410,5,{Fran:[['2026-08-15','6:50']]},{'Clean':70,'Back Squat':105,'Deadlift':135,'Snatch':48}],['c3','Rodrigo M.','Scaled',45,'bsf',980,2,{Fran:[['2026-08-15','8:48']]},{'Clean':65,'Back Squat':95,'Deadlift':125,'Snatch':40}],['c4','Kaká Lima','RX',24,'bsf',2760,8,{Fran:[['2026-08-15','6:15']]},{'Clean':105,'Back Squat':150,'Deadlift':195,'Snatch':78}],
+  ['d1','Bruna Sá','RX',30,'avv',3980,16,{Fran:[['2026-10-01','5:12']]},{'Clean':88,'Back Squat':125,'Deadlift':160,'Snatch':62}],['d2','Fábio Torres','RX',38,'avv',2230,4,{Fran:[['2026-10-01','7:05']]},{'Clean':100,'Back Squat':140,'Deadlift':185,'Snatch':70}],['d3','Carol Dias','Scaled',26,'avv',760,2,{Fran:[['2026-10-01','8:30']]},{'Clean':48,'Back Squat':72,'Deadlift':95,'Snatch':30}]];
+  return raw.map((r,i)=>({id:r[0],name:r[1],cat:r[2],age:r[3],box:r[4],xp:r[5],streak:r[6],bench:r[7],prs:r[8],team:'-',plan:'—',price:0,status:'ativo',lastCheckin:0,months:8+i,color:COLORS[(i+3)%COLORS.length],checkins:60+i*17,bumps:30+i*9,followers:40+i*23,handle:handle(r[1])}));
 }
 const inits=n=>n.split(' ').map(x=>x[0]).join('').slice(0,2).toUpperCase();
 
@@ -200,6 +231,13 @@ function mkFeed(){
     {id:'f4',who:'team',kind:'team',txt:'<b>Time Vermelho</b> assumiu a liderança do desafio de outubro',t:t(8),bumps:21},
     {id:'f5',who:'a8',kind:'badge',txt:'desbloqueou a badge <b>50 check-ins</b> 🎖',t:t(8),bumps:11},
     {id:'f6',who:'a3',kind:'result',txt:'fechou <b>Fran</b> em <b>6:35</b> RX · "mão rasgada mas feliz"',t:t(9),bumps:7},
+    {id:'g1',who:'b1',kind:'pr',txt:'bateu PR no <b>Snatch: 90 kg</b> 🏆 · "3 meses nessa barra"',t:t(7)-864e5,bumps:63,photo:'ph2',cap:'CF Praia do Canto · 06:00'},
+    {id:'g2',who:'d1',kind:'streak',txt:'fechou <b>16 semanas</b> de streak 🔥 · "não falho nem no feriado"',t:t(9)-864e5,bumps:48,photo:'ph1',cap:'Arena Vila Velha'},
+    {id:'g3',who:'c1',kind:'result',txt:'fechou <b>Fran</b> em <b>5:31</b> RX · 3º do Brasil essa semana',t:t(8)-2*864e5,bumps:81},
+    {id:'g4',who:'b2',kind:'ext',txt:'treino de fora: <b>corrida 8 km</b> em 42:10 · "dia de pernas descansando do WOD"',t:t(6)-864e5,bumps:19,photo:'ph3',cap:'Praia de Camburi'},
+    {id:'g5',who:'c4',kind:'badge',txt:'desbloqueou a badge <b>Murph</b> 🎖 · "com colete, chorando no final"',t:t(10)-3*864e5,bumps:57,photo:'ph4',cap:'Box Serra Forte · Murph 2026'},
+    {id:'g6',who:'d2',kind:'result',txt:'fechou <b>Grace</b> em <b>4:20</b> RX',t:t(7)-3*864e5,bumps:22},
+    {id:'g7',who:'b4',kind:'checkin',txt:'fez check-in às 06:00 · 14 pessoas na aula · "turma lotada na segunda, bora"',t:t(6)-4*864e5,bumps:12,photo:'ph5',cap:'CF Praia do Canto'},
   ];
 }
 const BADGES=[
@@ -212,10 +250,10 @@ const BADGES=[
 /* ---------- estado ---------- */
 let S;
 function fresh(){
-  return {role:null,tab:'hoje',athletes:mkAthletes(),wods:mkWods(),classes:mkClasses(),feed:mkFeed(),
+  return {role:null,tab:'hoje',athletes:[...mkAthletes(),...mkOthers()],following:['a2','a3','a11','a14','b1','b2','c1','d1'],feedScope:'box',invites:3,xq:'',wods:mkWods(),classes:mkClasses(),feed:mkFeed(),
     myCheckin:null,myWait:null,results:{},bumped:{},bumpDay:{d:todayKey,n:0},early:6,weekDone:[1,1,0,0,0,0,0],weekGoal:3,
     challenge:{title:'Outubro: 20 check-ins',goal:20,mine:13},teamXP:{vermelho:12480,preto:11920,lima:11300,azul:10870},
-    notes:[],rankTab:'rx',admTab:'painel',alunoFilter:'todos',seen:1,
+    notes:[{t:Date.now()-3600e3,txt:'Lari Campos (CF Praia do Canto) começou a te seguir'},{t:Date.now()-7200e3,txt:'Thi Nogueira deu fist bump no seu Fran'},{t:Date.now()-26*3600e3,txt:'Seu recap da semana está pronto'}],rankTab:'rx',admTab:'painel',alunoFilter:'todos',seen:1,
   };
 }
 function load(){try{const s=JSON.parse(localStorage.getItem(STORE));if(s&&s.athletes){S=s;return}}catch(e){}S=fresh()}
@@ -223,6 +261,8 @@ function save(){try{localStorage.setItem(STORE,JSON.stringify(S))}catch(e){}}
 function reset(){localStorage.removeItem(STORE);S=fresh();render();toast('Dados de demonstração restaurados','o')}
 const me=()=>S.athletes.find(a=>a.id==='me');
 const byId=id=>S.athletes.find(a=>a.id===id);
+const boxA=()=>S.athletes.filter(a=>a.box==='g27');
+const isFollowing=id=>S.following.includes(id);
 const todayWod=()=>S.wods.find(w=>w.date===todayKey)||S.wods[0];
 function levelOf(xp){let l=0;LEVELS.forEach((x,i)=>{if(xp>=x[1])l=i});return l}
 function levelProg(xp){const l=levelOf(xp);const cur=LEVELS[l][1],next=LEVELS[l+1]?LEVELS[l+1][1]:null;return {l,name:LEVELS[l][0],cur,next,pct:next?Math.round((xp-cur)/(next-cur)*100):100}}
@@ -245,14 +285,14 @@ function render(){
   const app=$('#app');
   if(!S.role){app.innerHTML=viewLogin();return}
   if(S.role==='atleta'){
-    app.innerHTML=hdr('Atleta')+'<main>'+({hoje:viewHoje,feed:viewFeed,ranking:viewRanking,perfil:viewPerfil})[S.tab]()+'</main>'+tabbar([['hoje','🏋️','Hoje'],['feed','💬','Feed'],['ranking','🏆','Ranking'],['perfil','👤','Perfil']],S.tab,'tab');
+    app.innerHTML=hdr('Atleta')+'<main>'+({hoje:viewHoje,feed:viewFeed,explorar:viewExplorar,ranking:viewRanking,perfil:viewPerfil})[S.tab]()+'</main>'+tabbar([['hoje','🏋️','Hoje'],['feed','💬','Feed'],['explorar','🧭','Explorar'],['ranking','🏆','Ranking'],['perfil','👤','Perfil']],S.tab,'tab');
   }else{
     app.innerHTML=hdr('Gestão')+'<main>'+({painel:admPainel,wod:admWod,turmas:admTurmas,alunos:admAlunos,fin:admFin})[S.admTab]()+'</main>'+tabbar([['painel','📊','Painel'],['wod','📋','WOD'],['turmas','🕒','Turmas'],['alunos','👥','Alunos'],['fin','💰','Caixa']],S.admTab,'admTab');
   }
   window.scrollTo(0,0);
 }
 function hdr(mode){
-  const m=me();const n=S.role==='atleta'?S.notes.length:(S.athletes.filter(a=>a.status==='atrasado').length+riskList().length);
+  const m=me();const n=S.role==='atleta'?S.notes.length:(boxA().filter(a=>a.status==='atrasado').length+riskList().length);
   return `<header class="hdr"><div class="brand">WODBOX<small>${BOX.name.toUpperCase()} · ${mode.toUpperCase()}</small></div>
   <div class="right"><button class="ib badge" data-n="${n}" data-a="notes">🔔</button><button class="ib" data-a="switch" title="Trocar de perfil">${S.role==='atleta'?avatar(m,'s'):'⚙️'}</button></div></header>`;
 }
@@ -280,6 +320,7 @@ function viewHoje(){
   <div class="card"><div class="row between"><h3>Semana</h3><span class="xs muted">meta ${S.weekDone.filter(Boolean).length}/${S.weekGoal} treinos · <button class="lm" data-a="goal">mudar</button></span></div><div class="streak" style="margin-top:10px">${wk}</div><div class="xs dim" style="margin-top:8px">Fechou a meta, +${XP.week} XP e o streak continua. Lesão ou viagem? <button class="bl" data-a="freeze">Congelar streak</button></div></div>
   <div class="card acc"><div class="row between"><div><div class="kicker">Desafio do mês</div><h3 style="margin-top:4px">${S.challenge.title}</h3></div><div class="big">${S.challenge.mine}/${S.challenge.goal}</div></div><div class="xp o" style="margin-top:10px"><i style="width:${Math.min(100,S.challenge.mine/S.challenge.goal*100)}%"></i></div><div class="xs muted" style="margin-top:8px">Prêmio: camiseta do Open interno. Seu time: <b style="color:${TEAMS[m.team][1]}">${TEAMS[m.team][0]}</b>, ${teamRank(m.team)}º lugar.</div></div>
   <button class="btn g" data-a="invite">🎟 Convidar um amigo para aula experimental · +${XP.referral} XP</button>
+  <button class="btn g" style="margin-top:10px" data-a="extpost">🏃 Postar treino de fora do box</button>
   <p class="demo">Dados de demonstração · <button data-a="reset">restaurar</button></p>`;
 }
 function teamRank(t){const arr=Object.entries(S.teamXP).sort((a,b)=>b[1]-a[1]);return arr.findIndex(x=>x[0]===t)+1}
@@ -308,17 +349,19 @@ function sheetResult(){
   <label>Versão</label><div class="seg" id="r-cat"><button class="${(r.cat||m.cat)==='RX'?'on':''}" data-v="RX">RX</button><button class="${(r.cat||m.cat)==='Scaled'?'on':''}" data-v="Scaled">Scaled</button></div>
   <label>Percepção de esforço · ${r.rpe||7}/10</label><input id="r-rpe" type="range" min="1" max="10" value="${r.rpe||7}" style="padding:0;accent-color:var(--accent)">
   <label>Comentário (opcional)</label><input id="r-note" placeholder="como foi?" value="${r.note||''}">
+  <label>Foto do treino (opcional)</label><div class="seg" id="r-ph"><button class="on" data-v="">sem foto</button><button data-v="ph1">🏋️ box</button><button data-v="ph2">🔥 barra</button><button data-v="ph3">🌊 rua</button><button data-v="ph4">💪 selfie</button></div>
   <div style="height:14px"></div><button class="btn l" id="r-save">Salvar e publicar no feed</button>`);
   $('#r-cat').onclick=e=>{const b=e.target.closest('button');if(!b)return;[...$('#r-cat').children].forEach(x=>x.classList.remove('on'));b.classList.add('on')};
+  $('#r-ph').onclick=e=>{const b=e.target.closest('button');if(!b)return;[...$('#r-ph').children].forEach(x=>x.classList.remove('on'));b.classList.add('on')};
   $('#r-rpe').oninput=e=>{e.target.previousElementSibling.textContent=`Percepção de esforço · ${e.target.value}/10`};
   $('#r-save').onclick=()=>{
     const score=$('#r-score').value.trim();if(!score){toast('Coloque o resultado','o');return}
-    const cat=$('#r-cat .on').dataset.v,rpe=+$('#r-rpe').value,note=$('#r-note').value.trim();const isNew=!S.results[w.id];
+    const cat=$('#r-cat .on').dataset.v,rpe=+$('#r-rpe').value,note=$('#r-note').value.trim(),ph=$('#r-ph .on').dataset.v;const isNew=!S.results[w.id];
     let pr=false;
     if(w.benchmark&&w.score==='time'){const prev=(m.bench[w.title]||[]).map(x=>toSec(x[1])).filter(Boolean);const s=toSec(score);if(s&&(!prev.length||s<Math.min(...prev)))pr=true;}
     S.results[w.id]={score,cat,rpe,note,pr};
     if(isNew){if(w.benchmark){m.bench[w.title]=m.bench[w.title]||[];m.bench[w.title].push([todayKey,score]);}
-      S.feed.unshift({id:'fr'+Date.now(),who:'me',kind:'result',txt:`fechou <b>${w.title}</b> em <b>${score}</b> ${cat}${note?' · "'+note+'"':''}${pr?' 🏆 PR':''}`,t:Date.now(),bumps:0});}
+      S.feed.unshift({id:'fr'+Date.now(),who:'me',kind:'result',txt:`fechou <b>${w.title}</b> em <b>${score}</b> ${cat}${note?' · "'+note+'"':''}${pr?' 🏆 PR':''}`,t:Date.now(),bumps:0,photo:ph||undefined,cap:ph?BOX.name+' · '+w.title:undefined});}
     save();closeSheet();render();
     if(isNew){addXP(w.benchmark?XP.benchmark:XP.result,w.benchmark?'benchmark registrado':'resultado registrado');if(pr)setTimeout(()=>addXP(XP.pr,`novo PR em ${w.title}!`),900);checkBadges()}else toast('Resultado atualizado');
   };
@@ -326,21 +369,67 @@ function sheetResult(){
 const toSec=s=>{const p=String(s).split(':').map(Number);if(p.length===2&&!p.some(isNaN))return p[0]*60+p[1];return null};
 
 /* ---------- ATLETA · FEED ---------- */
-function viewFeed(){
-  const items=S.feed.slice(0,30).map(f=>{const a=f.who==='team'?{name:'Desafio',color:'#ff5a1f'}:byId(f.who);const on=S.bumped[f.id];return `<div class="item"><span class="av" style="background:${a.color}">${f.who==='team'?'⚑':inits(a.name)}</span><div class="t"><div class="txt"><b>${f.who==='me'?'Você':a.name}</b> ${f.txt}</div><div class="meta"><span>${ago(f.t)}</span><button class="${on?'on':''}" data-a="bump" data-v="${f.id}">👊 ${f.bumps+(on?1:0)}</button><button data-a="comment" data-v="${f.id}">💬 comentar</button></div></div></div>`}).join('');
-  return `<div class="row between" style="margin-bottom:12px"><h1>Feed do box</h1><span class="chip">👊 ${S.bumpDay.d===todayKey?S.bumpDay.n:0}/${XP.bumpCap/XP.bump} hoje</span></div><div class="list feed">${items}</div><p class="demo">Fist bump e comentário valem +${XP.bump} XP, até ${XP.bumpCap} XP por dia.</p>`;
+function postHTML(f){
+  const isTeam=f.who==='team',a=isTeam?{name:'Desafio',color:'#ff5a1f',box:'g27'}:byId(f.who);if(!a)return'';
+  const b=boxOf(a),home=b.id==='g27',on=S.bumped[f.id];
+  const who=isTeam?`<b>Desafio</b>`:`<span class="who" data-a="athlete" data-v="${f.who}"><b>${f.who==='me'?'Você':a.name}</b></span>`;
+  return `<div class="item"><span class="av who" style="background:${a.color}" data-a="athlete" data-v="${f.who}">${isTeam?'⚑':inits(a.name)}</span><div class="t"><div class="txt">${who}<span class="boxtag ${home?'home':''}">${b.name}</span><br>${f.txt}</div>${f.photo?`<div class="photo ${f.photo}">${{ph1:'🏋️',ph2:'🔥',ph3:'🌊',ph4:'💪',ph5:'📸'}[f.photo]||'📸'}<span>${f.cap||b.name}</span></div>`:''}<div class="meta"><span>${ago(f.t)}</span><button class="${on?'on':''}" data-a="bump" data-v="${f.id}">👊 ${f.bumps+(on?1:0)}</button><button data-a="comment" data-v="${f.id}">💬 comentar</button></div></div></div>`;
 }
+function recapHTML(){
+  const m=me(),tr=S.weekDone.filter(Boolean).length,prs=S.feed.filter(f=>f.who==='me'&&f.kind==='pr'&&Date.now()-f.t<7*864e5).length;
+  return `<div class="recap"><div class="row between"><div><div class="kicker">Seu recap da semana</div><h3 style="margin-top:4px">Semana ${Math.ceil(TODAY.getDate()/7)} de outubro</h3></div><span class="tag lime">🔥 ${m.streak} sem</span></div>
+  <div class="nums"><div><b>${tr}</b><small>treinos</small></div><div><b>${(tr*25+prs*50).toLocaleString('pt-BR')}</b><small>XP</small></div><div><b>${prs}</b><small>PRs</small></div><div><b>${teamRank(m.team)}º</b><small>time</small></div></div>
+  <div class="row"><button class="btn l sm" data-a="share">Compartilhar</button><span class="xs muted">Vira um card bonito para o Instagram.</span></div></div>`;
+}
+function viewFeed(){
+  const sc=S.feedScope;
+  let posts=S.feed.filter(f=>{const a=f.who==='team'?{box:'g27'}:byId(f.who);if(!a)return false;if(sc==='box')return a.box==='g27';if(sc==='seguindo')return f.who==='me'||f.who==='team'||isFollowing(f.who);return true});
+  if(sc==='explorar')posts=[...posts].sort((a,b)=>(b.bumps+(S.bumped[b.id]?1:0))-(a.bumps+(S.bumped[a.id]?1:0)));
+  return `<div class="row between" style="margin-bottom:12px"><h1>Feed</h1><span class="chip">👊 ${S.bumpDay.d===todayKey?S.bumpDay.n:0}/${XP.bumpCap/XP.bump} hoje</span></div>
+  <div class="seg" style="margin-bottom:12px">${[['box','Meu box'],['seguindo','Seguindo · '+S.following.length],['explorar','Explorar']].map(x=>`<button class="${sc===x[0]?'on':''}" data-a="feedScope" data-v="${x[0]}">${x[1]}</button>`).join('')}</div>
+  ${sc!=='explorar'?recapHTML():''}
+  <div class="list feed">${posts.slice(0,40).map(postHTML).join('')||'<div class="empty">Nada por aqui ainda. Siga atletas na aba Explorar.</div>'}</div>
+  <p class="demo">${sc==='explorar'?'Os posts mais reagidos da comunidade. Toque no nome para ver o perfil e seguir.':'Fist bump e comentário valem +'+XP.bump+' XP, até '+XP.bumpCap+' XP por dia.'}</p>`;
+}
+/* ---------- ATLETA · EXPLORAR ---------- */
+function viewExplorar(){
+  const q=(S.xq||'').toLowerCase();
+  const all=S.athletes.filter(a=>a.id!=='me');
+  const found=q?all.filter(a=>a.name.toLowerCase().includes(q)||a.handle.includes(q)||boxOf(a).name.toLowerCase().includes(q)):null;
+  const sug=all.filter(a=>!isFollowing(a.id)).sort((a,b)=>b.xp-a.xp).slice(0,10);
+  const br=S.athletes.map(a=>({a,s:(a.bench.Fran||[]).slice(-1)[0]})).filter(x=>x.s&&x.a.cat==='RX').map(x=>({a:x.a,score:x.s[1],sec:toSec(x.s[1])})).sort((a,b)=>a.sec-b.sec).slice(0,5);
+  const pc=x=>`<div class="pcard">${avatar(x)}<b>${x.name}</b><small>${boxOf(x).name}<br>${x.cat} · 🔥 ${x.streak} sem</small><button class="follow ${isFollowing(x.id)?'on':''}" data-a="follow" data-v="${x.id}">${isFollowing(x.id)?'Seguindo':'Seguir'}</button></div>`;
+  return `<h1 style="margin-bottom:12px">Explorar</h1><div class="search"><input id="xq" placeholder="atleta, @handle ou box" value="${S.xq||''}"></div>
+  ${found?`<div class="list" style="margin-bottom:14px">${found.map(x=>`<div class="item">${avatar(x)}<div class="t" data-a="athlete" data-v="${x.id}"><b>${x.name} <span class="xs dim">@${x.handle}</span></b><span>${boxOf(x).name} · ${x.cat}</span></div><button class="follow ${isFollowing(x.id)?'on':''}" data-a="follow" data-v="${x.id}">${isFollowing(x.id)?'Seguindo':'Seguir'}</button></div>`).join('')||'<div class="empty">Ninguém com esse nome.</div>'}</div>`:''}
+  <div class="card acc"><div class="kicker">Duelo de boxes · outubro</div><div class="duel" style="margin-top:10px"><div><div class="n lm">1.240</div><small>Gladys 27</small></div><div class="vs">VS</div><div><div class="n">1.180</div><small>CF Praia do Canto</small></div></div><div class="xs muted" style="margin-top:8px;text-align:center">Check-ins do mês. Quem perde paga o churrasco. Faltam 19 dias.</div></div>
+  <h3 style="margin:14px 0 8px">Atletas para seguir</h3><div class="hscroll">${sug.map(pc).join('')}</div>
+  <h3 style="margin:14px 0 8px">Brasil · Fran RX esta semana</h3><div class="list lb">${br.map((x,i)=>`<div class="item ${x.a.id==='me'?'me':''}"><span class="pos">${i+1}</span>${avatar(x.a)}<div class="t" data-a="athlete" data-v="${x.a.id}"><b>${x.a.id==='me'?'Você':x.a.name}</b><span>${boxOf(x.a).name}</span></div><span class="sc">${x.score}</span></div>`).join('')}</div>
+  <h3 style="margin:14px 0 8px">Boxes da comunidade</h3><div class="list">${BOXES.map(b=>`<div class="item"><span class="av" style="background:${b.id==='g27'?'var(--lime)':'var(--panel2)'};color:${b.id==='g27'?'#000':'var(--ink)'}">⚑</span><div class="t"><b>${b.name} ${b.id==='g27'?'<span class="verified">· seu box</span>':''}</b><span>${b.city} · ${b.members} atletas · ${S.athletes.filter(a=>a.box===b.id&&isFollowing(a.id)).length} que você segue</span></div></div>`).join('')}</div>
+  <p class="demo">Comunidade fechada: só entra quem é de um box verificado ou foi convidado. Você tem ${S.invites} convites no perfil.</p>`;
+}
+function sheetAthlete(id){
+  if(id==='me'){closeSheet();S.tab='perfil';save();render();return}
+  const a=byId(id);if(!a)return;const b=boxOf(a),f=isFollowing(id),lp=levelProg(a.xp),posts=S.feed.filter(p=>p.who===id).slice(0,3);
+  sheet(`<div class="row">${avatar(a)}<div style="flex:1"><h2>${a.name}</h2><div class="sm muted">@${a.handle} · ${b.name} <span class="verified">✓</span></div></div><button class="follow ${f?'on':''}" data-a="follow" data-v="${id}">${f?'Seguindo':'Seguir'}</button></div>
+  <div class="stats3"><div><b>${a.followers+(f?1:0)}</b>seguidores</div><div><b>${a.checkins}</b>check-ins</div><div><b>🔥 ${a.streak}</b>semanas</div><div><b>${lp.name}</b>nível</div></div>
+  <div class="card" style="margin-top:14px"><h3>PRs</h3>${Object.entries(a.prs).map(([k,v])=>`<div class="pr"><span>${k}</span><b>${v} kg</b></div>`).join('')||'<div class="empty">Sem PRs públicos.</div>'}</div>
+  ${a.bench.Fran?`<div class="card"><div class="row between"><span>Fran</span><b class="lm" style="font-family:var(--display);font-size:22px">${a.bench.Fran.slice(-1)[0][1]}</b></div></div>`:''}
+  ${posts.length?`<h3 style="margin:8px 0">Últimos treinos</h3><div class="list feed">${posts.map(postHTML).join('')}</div>`:''}`);
+}
+function follow(id){const a=byId(id);if(isFollowing(id)){S.following=S.following.filter(x=>x!==id);toast(`Você deixou de seguir ${a.name}`,'o')}else{S.following.push(id);toast(`Agora você segue <b>${a.name}</b> · ${boxOf(a).name}`)}save();if($('#sheetbg').classList.contains('on'))sheetAthlete(id);render()}
+
 function bump(id){if(S.bumped[id]){delete S.bumped[id];save();render();return}S.bumped[id]=1;if(S.bumpDay.d!==todayKey)S.bumpDay={d:todayKey,n:0};const f=S.feed.find(x=>x.id===id);if(f&&f.who!=='me'&&S.bumpDay.n<XP.bumpCap/XP.bump){S.bumpDay.n++;me().bumps++;save();render();addXP(XP.bump,'fist bump');checkBadges()}else{save();render()}}
 
 /* ---------- ATLETA · RANKING ---------- */
 function viewRanking(){
   const t=S.rankTab;let rows='';
-  const fran=S.athletes.map(a=>({a,s:(a.bench.Fran||[]).slice(-1)[0]})).filter(x=>x.s).map(x=>({a:x.a,score:x.s[1],sec:toSec(x.s[1])}));
+  const fran=boxA().map(a=>({a,s:(a.bench.Fran||[]).slice(-1)[0]})).filter(x=>x.s).map(x=>({a:x.a,score:x.s[1],sec:toSec(x.s[1])}));
   if(t==='rx'||t==='sc'){const cat=t==='rx'?'RX':'Scaled';const r=S.results[todayWod().id];rows=fran.filter(x=>x.a.cat===cat||(x.a.id==='me'&&r&&r.cat===cat)).sort((a,b)=>a.sec-b.sec).map((x,i)=>row(i,x.a,`${x.a.cat} · ${x.a.age} anos`,x.score)).join('')}
   if(t==='ev'){const ev=[['a8','começou em agosto','+31%'],['a7','voltou de lesão','+24%'],['a6','Scaled → RX no Back Squat','+18%'],['a10','primeiro Fran sem pausa','+15%'],['a14','Snatch subiu 5 kg','+9%'],['me','já era RX','+4%']];rows=ev.map((e,i)=>row(i,byId(e[0]),e[1],e[2])).join('')}
-  if(t==='tm'){rows=Object.entries(S.teamXP).sort((a,b)=>b[1]-a[1]).map(([k,v],i)=>{const n=S.athletes.filter(a=>a.team===k).length;return `<div class="item ${me().team===k?'me':''}"><span class="pos">${i+1}</span><span class="av" style="background:${TEAMS[k][1]}">⚑</span><div class="t"><b>Time ${TEAMS[k][0]}</b><span>${n} atletas · ${Math.round(v/n)} XP por atleta</span></div><span class="sc">${v.toLocaleString('pt-BR')}</span></div>`}).join('')}
-  if(t==='xp'){rows=[...S.athletes].sort((a,b)=>b.xp-a.xp).slice(0,10).map((a,i)=>row(i,a,`nível ${levelProg(a.xp).name} · 🔥 ${a.streak} sem`,a.xp.toLocaleString('pt-BR'))).join('')}
-  return `<h1 style="margin-bottom:12px">Ranking</h1><div class="seg" style="margin-bottom:12px">${[['rx','Fran · RX'],['sc','Fran · Scaled'],['ev','Evolução do mês'],['tm','Times'],['xp','XP do mês']].map(x=>`<button class="${t===x[0]?'on':''}" data-a="rankTab" data-v="${x[0]}">${x[1]}</button>`).join('')}</div><div class="list lb">${rows||'<div class="empty">Ninguém ainda nessa categoria hoje.</div>'}</div>
+  if(t==='tm'){rows=Object.entries(S.teamXP).sort((a,b)=>b[1]-a[1]).map(([k,v],i)=>{const n=boxA().filter(a=>a.team===k).length;return `<div class="item ${me().team===k?'me':''}"><span class="pos">${i+1}</span><span class="av" style="background:${TEAMS[k][1]}">⚑</span><div class="t"><b>Time ${TEAMS[k][0]}</b><span>${n} atletas · ${Math.round(v/n)} XP por atleta</span></div><span class="sc">${v.toLocaleString('pt-BR')}</span></div>`}).join('')}
+  if(t==='br'){const r=S.athletes.map(a=>({a,s:(a.bench.Fran||[]).slice(-1)[0]})).filter(x=>x.s&&x.a.cat==='RX').map(x=>({a:x.a,score:x.s[1],sec:toSec(x.s[1])})).sort((a,b)=>a.sec-b.sec);rows=r.map((x,i)=>row(i,x.a,boxOf(x.a).name+' · '+x.a.age+' anos',x.score)).join('')}
+  if(t==='xp'){rows=[...boxA()].sort((a,b)=>b.xp-a.xp).slice(0,10).map((a,i)=>row(i,a,`nível ${levelProg(a.xp).name} · 🔥 ${a.streak} sem`,a.xp.toLocaleString('pt-BR'))).join('')}
+  return `<h1 style="margin-bottom:12px">Ranking</h1><div class="seg" style="margin-bottom:12px">${[['rx','Box · Fran RX'],['sc','Box · Fran Scaled'],['br','Brasil · Fran RX'],['ev','Evolução do mês'],['tm','Times'],['xp','XP do mês']].map(x=>`<button class="${t===x[0]?'on':''}" data-a="rankTab" data-v="${x[0]}">${x[1]}</button>`).join('')}</div><div class="list lb">${rows||'<div class="empty">Ninguém ainda nessa categoria hoje.</div>'}</div>
   <p class="demo">${t==='ev'?'Evolução compara o resultado de hoje com o anterior do próprio atleta. Quem está começando lidera aqui.':'Rankings são opcionais: dá para sair deles no perfil e manter o resto.'}</p>`;
 }
 const row=(i,a,sub,score)=>`<div class="item ${a.id==='me'?'me':''}"><span class="pos">${i+1}</span>${avatar(a)}<div class="t"><b>${a.id==='me'?'Você':a.name}</b><span>${sub}</span></div><span class="sc">${score}</span></div>`;
@@ -351,7 +440,9 @@ function viewPerfil(){
   const bd=BADGES.map(b=>`<div class="bd ${b[3](ctx)?'':'lk'}"><span class="e">${b[1]}</span>${b[2]}</div>`).join('');
   const prs=Object.entries(m.prs).map(([k,v])=>`<div class="pr"><span>${k}</span><b>${v} kg</b></div>`).join('');
   const bench=Object.entries(m.bench).map(([k,v])=>`<div class="pr"><span>${k} <span class="xs dim">· ${v.length}x</span></span><b>${v.slice(-1)[0][1]}</b></div>`).join('');
-  return `<div class="row" style="margin-bottom:14px">${avatar(m)}<div><h1>${m.name}</h1><div class="sm muted">${m.cat} · Time ${TEAMS[m.team][0]} · ${m.months} meses de box</div></div></div>
+  return `<div class="row" style="margin-bottom:10px">${avatar(m)}<div style="flex:1"><h1>${m.name}</h1><div class="sm muted">@${m.handle} · ${BOX.name} <span class="verified">✓ verificado</span></div></div></div>
+  <div class="stats3" style="margin-bottom:14px"><div><b>${m.followers}</b>seguidores</div><div><b>${S.following.length}</b>seguindo</div><div><b>${m.cat}</b>categoria</div><div><b>${m.months}m</b>de box</div></div>
+  <div class="card lime"><div class="row between"><div><b>Convites para a comunidade</b><div class="xs muted">${S.invites} disponíveis · para quem treina cross em outro box</div></div><button class="btn g sm" data-a="invite2" ${S.invites?'':'disabled'}>Convidar</button></div></div>
   <div class="grid3" style="margin-bottom:12px"><div class="kpi"><div class="n lm">${m.checkins}</div><div class="l">check-ins</div></div><div class="kpi"><div class="n">${m.streak}</div><div class="l">semanas de streak</div></div><div class="kpi"><div class="n gd">${m.bumps}</div><div class="l">fist bumps dados</div></div></div>
   <div class="card"><div class="row between"><h3>Nível ${lp.l+1} · ${lp.name}</h3><span class="sm muted">${m.xp.toLocaleString('pt-BR')} XP</span></div><div class="xp" style="margin:10px 0"><i style="width:${lp.pct}%"></i></div><div class="xs muted">${LEVELS.map((l,i)=>`<span style="${i<=lp.l?'color:var(--lime)':''}">${l[0]}</span>`).join(' · ')}</div></div>
   <h3 style="margin:16px 0 8px">Badges · ${BADGES.filter(b=>b[3](ctx)).length}/${BADGES.length}</h3><div class="badges">${bd}</div>
@@ -365,15 +456,15 @@ function viewPerfil(){
 /* =====================================================================
    GESTÃO
    ===================================================================== */
-const riskList=()=>S.athletes.filter(a=>a.id!=='me'&&a.lastCheckin>=7&&a.plan!=='Experimental');
+const riskList=()=>boxA().filter(a=>a.id!=='me'&&a.lastCheckin>=7&&a.plan!=='Experimental');
 function admPainel(){
-  const act=S.athletes.filter(a=>a.plan!=='Experimental'),ci=S.classes.reduce((n,c)=>n+c.att.length,0),cap=S.classes.reduce((n,c)=>n+c.cap,0);
-  const late=S.athletes.filter(a=>a.status==='atrasado'),risk=riskList(),mrr=act.reduce((n,a)=>n+a.price,0);
+  const act=boxA().filter(a=>a.plan!=='Experimental'),ci=S.classes.reduce((n,c)=>n+c.att.length,0),cap=S.classes.reduce((n,c)=>n+c.cap,0);
+  const late=boxA().filter(a=>a.status==='atrasado'),risk=riskList(),mrr=act.reduce((n,a)=>n+a.price,0);
   const w=todayWod();const res=Object.keys(S.results).length+5;
   return `<div class="kicker">${fmtDate(TODAY)}</div><h1 style="margin-bottom:12px">${BOX.name}</h1>
   <div class="grid2" style="margin-bottom:12px"><div class="kpi"><div class="n">${act.length}</div><div class="l">alunos ativos</div></div><div class="kpi good"><div class="n">${ci}</div><div class="l">check-ins hoje · ${Math.round(ci/cap*100)}% de ocupação</div></div><div class="kpi ${late.length?'warn':''}"><div class="n">${late.length}</div><div class="l">em atraso · R$ ${late.reduce((n,a)=>n+a.price,0)}</div></div><div class="kpi ${risk.length?'warn':''}"><div class="n">${risk.length}</div><div class="l">em risco · 7+ dias sem treinar</div></div></div>
   <div class="card"><div class="row between"><div><div class="xs muted">WOD de hoje</div><h3>${w.title} · ${w.type}</h3></div><span class="tag ${w.published?'lime':'red'}">${w.published?'publicado':'rascunho'}</span></div><div class="xs muted" style="margin-top:8px">${res} resultados registrados · ${S.classes.filter(c=>c.att.length>=c.cap).length} turma lotada</div></div>
-  <div class="card"><div class="row between"><h3>Receita</h3><span class="sm muted">MRR</span></div><div class="big lm" style="margin:6px 0">R$ ${mrr.toLocaleString('pt-BR')}</div><div class="xs muted">${act.filter(a=>a.plan==='Ilimitado').length} ilimitado · ${act.filter(a=>a.plan==='3x semana').length} 3x semana · ${S.athletes.filter(a=>a.plan==='Experimental').length} experimental</div></div>
+  <div class="card"><div class="row between"><h3>Receita</h3><span class="sm muted">MRR</span></div><div class="big lm" style="margin:6px 0">R$ ${mrr.toLocaleString('pt-BR')}</div><div class="xs muted">${act.filter(a=>a.plan==='Ilimitado').length} ilimitado · ${act.filter(a=>a.plan==='3x semana').length} 3x semana · ${boxA().filter(a=>a.plan==='Experimental').length} experimental</div></div>
   <h3 style="margin:14px 0 8px">Ação do dia</h3><div class="list">${risk.slice(0,3).map(a=>`<div class="item tap" data-a="aluno" data-v="${a.id}">${avatar(a)}<div class="t"><b>${a.name}</b><span>${a.lastCheckin} dias sem treinar · ${a.plan}</span></div><button class="btn g sm" data-a="msg" data-v="${a.id}">💬</button></div>`).join('')}${late.map(a=>`<div class="item tap" data-a="aluno" data-v="${a.id}">${avatar(a)}<div class="t"><b>${a.name}</b><span>mensalidade atrasada · R$ ${a.price}</span></div><button class="btn g sm" data-a="cobrar" data-v="${a.id}">Pix</button></div>`).join('')}</div>
   <div class="card" style="margin-top:12px"><h3>Times · desafio de outubro</h3><div style="margin-top:10px">${Object.entries(S.teamXP).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`<div class="team"><span class="nm" style="color:${TEAMS[k][1]}">${TEAMS[k][0]}</span><div class="xp"><i style="width:${Math.round(v/13000*100)}%;background:${TEAMS[k][1]}"></i></div><span class="v">${v.toLocaleString('pt-BR')}</span></div>`).join('')}</div></div>
   <p class="demo">Alerta de risco vai só para o gestor e coaches, nunca para o feed. · <button data-a="switch">Trocar para atleta</button></p>`;
@@ -404,9 +495,9 @@ function sheetTurma(id){
 }
 function admAlunos(){
   const f=S.alunoFilter,q=(S.q||'').toLowerCase();
-  let list=S.athletes.filter(a=>a.name.toLowerCase().includes(q));
+  let list=boxA().filter(a=>a.name.toLowerCase().includes(q));
   if(f==='risco')list=list.filter(a=>a.lastCheckin>=7);if(f==='atraso')list=list.filter(a=>a.status==='atrasado');if(f==='novos')list=list.filter(a=>a.months<=3);
-  return `<h1 style="margin-bottom:12px">Alunos · ${S.athletes.length}</h1><div class="search"><input placeholder="buscar" id="q" value="${S.q||''}"><button class="btn p sm" data-a="novoaluno">+ Novo</button></div>
+  return `<h1 style="margin-bottom:12px">Alunos · ${boxA().length}</h1><div class="search"><input placeholder="buscar" id="q" value="${S.q||''}"><button class="btn p sm" data-a="novoaluno">+ Novo</button></div>
   <div class="seg" style="margin-bottom:12px">${[['todos','Todos'],['risco','Em risco'],['atraso','Em atraso'],['novos','Novos']].map(x=>`<button class="${f===x[0]?'on':''}" data-a="alunoFilter" data-v="${x[0]}">${x[1]}</button>`).join('')}</div>
   <div class="list">${list.map(a=>`<div class="item tap" data-a="aluno" data-v="${a.id}">${avatar(a)}<div class="t"><b>${a.name} <span class="xs dim">· ${a.cat}</span></b><span>${a.plan} · ${a.lastCheckin===0?'treinou hoje':a.lastCheckin+' dias sem treinar'}</span></div>${a.status==='atrasado'?'<span class="tag red">atraso</span>':a.lastCheckin>=7?'<span class="tag gold">risco</span>':`<span class="tag">🔥 ${a.streak}</span>`}</div>`).join('')||'<div class="empty">Nenhum aluno aqui.</div>'}</div>`;
 }
@@ -419,7 +510,7 @@ function sheetAluno(id){
   <div class="grid2"><button class="btn g" data-a="msg" data-v="${a.id}">💬 WhatsApp</button>${a.status==='atrasado'?`<button class="btn l" data-a="cobrar" data-v="${a.id}">Cobrar via Pix</button>`:a.plan==='Experimental'?`<button class="btn l" data-a="matricular" data-v="${a.id}">Matricular</button>`:`<button class="btn g" data-a="congelar" data-v="${a.id}">Congelar plano</button>`}</div>`);
 }
 function admFin(){
-  const act=S.athletes.filter(a=>a.plan!=='Experimental'),mrr=act.reduce((n,a)=>n+a.price,0),late=S.athletes.filter(a=>a.status==='atrasado');
+  const act=boxA().filter(a=>a.plan!=='Experimental'),mrr=act.reduce((n,a)=>n+a.price,0),late=boxA().filter(a=>a.status==='atrasado');
   const paid=mrr-late.reduce((n,a)=>n+a.price,0);
   return `<h1 style="margin-bottom:12px">Caixa</h1><div class="grid2" style="margin-bottom:12px"><div class="kpi good"><div class="n">R$ ${paid.toLocaleString('pt-BR')}</div><div class="l">recebido em outubro</div></div><div class="kpi ${late.length?'warn':''}"><div class="n">R$ ${late.reduce((n,a)=>n+a.price,0)}</div><div class="l">em atraso · ${late.length} alunos</div></div><div class="kpi"><div class="n">R$ ${mrr.toLocaleString('pt-BR')}</div><div class="l">MRR previsto</div></div><div class="kpi"><div class="n">${Math.round(paid/mrr*100)}%</div><div class="l">adimplência</div></div></div>
   <div class="card"><h3>Por plano</h3><table class="table" style="margin-top:8px">${[['Ilimitado',189],['3x semana',149]].map(p=>{const n=act.filter(a=>a.plan===p[0]).length;return `<tr><td>${p[0]} <span class="dim xs">· ${n} alunos</span></td><td>R$ ${(n*p[1]).toLocaleString('pt-BR')}</td></tr>`}).join('')}<tr><td>Pix e cartão recorrente</td><td class="lm">ativo</td></tr></table></div>
@@ -445,23 +536,27 @@ document.addEventListener('click',e=>{
     invite(){const link=location.origin+location.pathname+'?exp=rafa';sheet(`<h2>Convidar amigo</h2><p class="sm muted">Seu link de aula experimental. Quando o amigo vier, você ganha +${XP.referral} XP e o box ganha um aluno.</p><input value="${link}" readonly style="margin:12px 0"><button class="btn l" id="cp">Copiar link</button>`);$('#cp').onclick=()=>{try{navigator.clipboard.writeText(link)}catch(e){}closeSheet();toast('Link copiado. Manda no WhatsApp 📲')}},
     addpr(){sheet(`<h2>Registrar PR</h2><label>Movimento</label><select id="pr-m">${['Clean','Back Squat','Deadlift','Snatch','Front Squat','Clean & Jerk','Press','Bench'].map(x=>`<option>${x}</option>`).join('')}</select><label>Carga (kg)</label><input id="pr-v" inputmode="decimal" placeholder="ex. 105"><div style="height:14px"></div><button class="btn l" id="pr-ok">Salvar</button>`);$('#pr-ok').onclick=()=>{const m=me(),k=$('#pr-m').value,n=parseFloat($('#pr-v').value);if(!n){toast('Coloque a carga','o');return}const old=m.prs[k]||0;closeSheet();if(n>old){m.prs[k]=n;S.feed.unshift({id:'fp'+Date.now(),who:'me',kind:'pr',txt:`bateu PR no <b>${k}: ${n} kg</b> 🏆`,t:Date.now(),bumps:0});save();render();addXP(XP.pr,`novo PR em ${k}`)}else toast(`Seu PR atual em ${k} é ${old} kg. Continua!`,'o')}},
     pay(){toast('Pix copiado. Na versão real abre o app do banco.','o')},optout(){toast(b.checked?'Você voltou aos rankings':'Você saiu dos rankings. XP e badges continuam.','o')},
-    notes(){const n=S.role==='atleta'?S.notes:[...riskList().map(a=>({t:Date.now()-a.lastCheckin*864e5,txt:`${a.name} está há ${a.lastCheckin} dias sem treinar`})),...S.athletes.filter(a=>a.status==='atrasado').map(a=>({t:Date.now(),txt:`${a.name} com mensalidade atrasada (R$ ${a.price})`}))];sheet(`<h2>Avisos</h2><div class="list" style="margin-top:12px">${n.map(x=>`<div class="item"><div class="t"><b>${x.txt}</b><span>${ago(x.t)}</span></div></div>`).join('')||'<div class="empty">Nada por aqui. Bom sinal.</div>'}</div>`)},
+    notes(){const n=S.role==='atleta'?S.notes:[...riskList().map(a=>({t:Date.now()-a.lastCheckin*864e5,txt:`${a.name} está há ${a.lastCheckin} dias sem treinar`})),...boxA().filter(a=>a.status==='atrasado').map(a=>({t:Date.now(),txt:`${a.name} com mensalidade atrasada (R$ ${a.price})`}))];sheet(`<h2>Avisos</h2><div class="list" style="margin-top:12px">${n.map(x=>`<div class="item"><div class="t"><b>${x.txt}</b><span>${ago(x.t)}</span></div></div>`).join('')||'<div class="empty">Nada por aqui. Bom sinal.</div>'}</div>`)},
     savewod(){saveWod()},usewod(){useWod(v)},turma(){sheetTurma(v)},
     rmatt(){const[c,a]=v.split('|');const cl=S.classes.find(x=>x.id===c);cl.att=cl.att.filter(x=>x!==a);if(a==='me')S.myCheckin=null;save();sheetTurma(c);render()},
     promote(){const[c,a]=v.split('|');const cl=S.classes.find(x=>x.id===c);cl.wait=cl.wait.filter(x=>x!==a);if(cl.att.length<cl.cap)cl.att.push(a);if(a==='me'){S.myWait=null;S.myCheckin=c}save();sheetTurma(c);render();toast(`${byId(a).name} liberado para as ${cl.time}`)},
-    addatt(){const cl=S.classes.find(x=>x.id===v);const opts=S.athletes.filter(a=>!cl.att.includes(a.id));sheet(`<h2>Adicionar às ${cl.time}</h2><div class="list" style="margin-top:12px">${opts.map(a=>`<div class="item tap" data-a="doadd" data-v="${v}|${a.id}">${avatar(a,'s')}<div class="t"><b>${a.name}</b><span>${a.plan}</span></div></div>`).join('')}</div>`)},
+    addatt(){const cl=S.classes.find(x=>x.id===v);const opts=boxA().filter(a=>!cl.att.includes(a.id));sheet(`<h2>Adicionar às ${cl.time}</h2><div class="list" style="margin-top:12px">${opts.map(a=>`<div class="item tap" data-a="doadd" data-v="${v}|${a.id}">${avatar(a,'s')}<div class="t"><b>${a.name}</b><span>${a.plan}</span></div></div>`).join('')}</div>`)},
     doadd(){const[c,a]=v.split('|');const cl=S.classes.find(x=>x.id===c);if(cl.att.length>=cl.cap){toast('Turma lotada. Vai para a fila.','o');cl.wait=cl.wait||[];cl.wait.push(a)}else cl.att.push(a);if(a==='me')S.myCheckin=c;save();sheetTurma(c);render()},
-    aluno(){sheetAluno(v)},msg(){closeSheet();toast(`Abrindo WhatsApp de ${byId(v).name} com a mensagem pronta 📲`,'o')},
+    aluno(){sheetAluno(v)},athlete(){sheetAthlete(v)},follow(){follow(v)},feedScope(){S.feedScope=v;save();render()},
+    share(){toast('Card do recap gerado. Na versão real abre o compartilhar do celular.','o')},
+    invite2(){const link=location.origin+location.pathname+'?convite=rafa';sheet(`<h2>Convidar para a comunidade</h2><p class="sm muted">Para quem treina cross em um box que ainda não usa o WODBOX. A pessoa entra como atleta verificado por você.</p><input value="${link}" readonly style="margin:12px 0"><button class="btn l" id="cv-ok">Copiar e usar 1 convite</button>`);$('#cv-ok').onclick=()=>{try{navigator.clipboard.writeText(link)}catch(e){}S.invites=Math.max(0,S.invites-1);save();closeSheet();render();toast('Convite copiado. Restam '+S.invites+'.')}},
+    extpost(){sheet(`<h2>Treino de fora do box</h2><p class="sm muted">Corrida, natação, mobilidade, treino em viagem. Entra no seu feed e vale +5 XP.</p><label>Tipo</label><select id="ex-t"><option>Corrida</option><option>Natação</option><option>Bike</option><option>Mobilidade</option><option>Treino em viagem</option></select><label>Como foi</label><input id="ex-d" placeholder="ex. 8 km em 42:10"><label>Foto</label><div class="seg" id="ex-ph"><button class="on" data-v="">sem foto</button><button data-v="ph3">🌊 rua</button><button data-v="ph1">🏋️ academia</button><button data-v="ph4">💪 selfie</button></div><div style="height:14px"></div><button class="btn l" id="ex-ok">Postar</button>`);$('#ex-ph').onclick=e=>{const b=e.target.closest('button');if(!b)return;[...$('#ex-ph').children].forEach(x=>x.classList.remove('on'));b.classList.add('on')};$('#ex-ok').onclick=()=>{const d=$('#ex-d').value.trim();if(!d){toast('Conta como foi','o');return}const ph=$('#ex-ph .on').dataset.v;S.feed.unshift({id:'fx'+Date.now(),who:'me',kind:'ext',txt:`treino de fora: <b>${$('#ex-t').value.toLowerCase()}</b> · ${d}`,t:Date.now(),bumps:0,photo:ph||undefined,cap:ph?$('#ex-t').value:undefined});save();closeSheet();S.tab='feed';S.feedScope='seguindo';render();addXP(5,'treino de fora do box')}},msg(){closeSheet();toast(`Abrindo WhatsApp de ${byId(v).name} com a mensagem pronta 📲`,'o')},
     cobrar(){const a=byId(v);closeSheet();toast(`Cobrança Pix de R$ ${a.price} enviada para ${a.name}`,'o');setTimeout(()=>{a.status='ativo';save();render();toast(`<b>${a.name} pagou.</b> Acesso liberado.`)},2500)},
     matricular(){const a=byId(v);a.plan='3x semana';a.price=149;a.months=1;closeSheet();save();render();toast(`<b>${a.name} matriculado.</b> App liberado e boas-vindas enviadas.`)},
     congelar(){closeSheet();toast('Plano congelado por 30 dias. Streak pausado.','o')},
-    novoaluno(){sheet(`<h2>Novo aluno</h2><label>Nome</label><input id="na-n" placeholder="nome"><label>Plano</label><select id="na-p"><option>Experimental</option><option>3x semana</option><option>Ilimitado</option></select><label>Categoria</label><select id="na-c"><option>Scaled</option><option>RX</option></select><div style="height:14px"></div><button class="btn l" id="na-ok">Cadastrar</button>`);$('#na-ok').onclick=()=>{const n=$('#na-n').value.trim();if(!n){toast('Coloque o nome','o');return}const p=$('#na-p').value;const t=Object.keys(TEAMS)[S.athletes.length%4];S.athletes.push({id:'a'+Date.now(),name:n,cat:$('#na-c').value,age:30,team:t,xp:0,streak:0,plan:p,price:p==='Ilimitado'?189:p==='3x semana'?149:0,status:'ativo',lastCheckin:0,months:0,bench:{},prs:{},color:COLORS[S.athletes.length%COLORS.length],checkins:0,bumps:0});save();closeSheet();render();toast(`<b>${n}</b> cadastrado no Time ${TEAMS[t][0]}.`)}},
+    novoaluno(){sheet(`<h2>Novo aluno</h2><label>Nome</label><input id="na-n" placeholder="nome"><label>Plano</label><select id="na-p"><option>Experimental</option><option>3x semana</option><option>Ilimitado</option></select><label>Categoria</label><select id="na-c"><option>Scaled</option><option>RX</option></select><div style="height:14px"></div><button class="btn l" id="na-ok">Cadastrar</button>`);$('#na-ok').onclick=()=>{const n=$('#na-n').value.trim();if(!n){toast('Coloque o nome','o');return}const p=$('#na-p').value;const t=Object.keys(TEAMS)[boxA().length%4];S.athletes.push({id:'a'+Date.now(),name:n,cat:$('#na-c').value,age:30,team:t,xp:0,streak:0,plan:p,price:p==='Ilimitado'?189:p==='3x semana'?149:0,status:'ativo',lastCheckin:0,months:0,bench:{},prs:{},color:COLORS[boxA().length%COLORS.length],checkins:0,bumps:0,box:'g27',followers:0,handle:handle(n)});save();closeSheet();render();toast(`<b>${n}</b> cadastrado no Time ${TEAMS[t][0]}.`)}},
   };
   if(acts[a])acts[a]();
 });
-document.addEventListener('input',e=>{if(e.target.id==='q'){S.q=e.target.value;save();const pos=e.target.selectionStart;render();const i=$('#q');if(i){i.focus();i.setSelectionRange(pos,pos)}}});
+document.addEventListener('input',e=>{if(e.target.id==='xq'){S.xq=e.target.value;save();const pos=e.target.selectionStart;render();const i=$('#xq');if(i){i.focus();i.setSelectionRange(pos,pos)}}
+  if(e.target.id==='q'){S.q=e.target.value;save();const pos=e.target.selectionStart;render();const i=$('#q');if(i){i.focus();i.setSelectionRange(pos,pos)}}});
 
-load();{const r=new URLSearchParams(location.search).get('role');if(r){S.role=r==='gestao'?'gestao':'atleta';const t=new URLSearchParams(location.search).get('tab');if(t){if(S.role==='atleta')S.tab=t;else S.admTab=t}save()}}render();
+load();{const r=new URLSearchParams(location.search).get('role');if(r){S.role=r==='gestao'?'gestao':'atleta';const t=new URLSearchParams(location.search).get('tab');if(t){if(S.role==='atleta')S.tab=t;else S.admTab=t}const q=new URLSearchParams(location.search);if(q.get('scope'))S.feedScope=q.get('scope');if(q.get('rank'))S.rankTab=q.get('rank');save()}}render();
 if('serviceWorker' in navigator&&location.protocol.startsWith('http')){navigator.serviceWorker.register('./sw.js').catch(()=>{})}
 </script>
 </body>
